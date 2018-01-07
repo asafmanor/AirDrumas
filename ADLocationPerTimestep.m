@@ -1,0 +1,37 @@
+function [updatedTemporalData, stickLoc] = ADLocationPerTimestep(frames, params, temporalData)
+% given two frames acquired from the two cameras, and extra data extracted
+% from previous frames such as estimated stickLoc, this function runs all necessary 
+% processes such as pre-processing, stickLoc and depth extraction.
+% the function returns the stickLoc in terms of [x,y,z] of the two points of interest
+% INPUTS: 	frames - cell array of frames extracted from main and slave cameras, respectively
+%			params - parameters struct
+%			temporalData - struct containing all relevant data from previous time-step
+% OUTPUTS: 	updatedTemporalData - struct containing all relevant data of this time-step
+%			stickLoc - array of stickLoc struct for each point of interest (usually 2)
+%			stated in stickLoc(n).x, stickLoc(n).y, stickLoc(n).z
+
+% important assumptions: this function is called after stereo cameras have been calibrated.
+% calibration object is stored in params.stereoCamerasCalib
+
+global debug;
+% pre-process, extract features
+pp_frames = cellfun(@(x) ADPreProcessing(x, params), frames, 'UniformOutput', false);
+features  = cellfun(@(x) ADExtractFeatures(x, params), frames, 'UniformOutput', false);
+% find current stickLoc in (x,y)
+stickLoc = ADFindLocationsXY(frames(1), temporalData, params);
+stickLoc = ADFindLocationsZ(frames, stickLoc, params);
+
+% estimate next state vector using current stickLoc and state vector
+% todo asaf - add parameter in temporalData specifiying if a state vector exists
+lastEstStateVector = temporalData.estStateVector;
+updatedTemporalData.estStateVector = ADMotionEstimation(lastEstStateVector, currentLocation);
+
+% debug dump
+if debug.enable
+	t = debug.timestep;
+	debug.pp_frames(t) = pp_frames;
+	debug.stickLoc(t) = stickLoc;
+	debug.features(t) = features;
+end
+
+end
