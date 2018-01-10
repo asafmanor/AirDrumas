@@ -5,8 +5,8 @@ function [updatedTemporalData, stickLoc] = ADLocationPerTimestep(frames, params,
 % the function returns the stickLoc in terms of [x,y,z] of the two points of interest
 % INPUTS: 	frames - cell array of frames extracted from main and slave cameras, respectively
 %			params - parameters struct
-%			temporalData - struct containing all relevant data from previous time-step
-% OUTPUTS: 	updatedTemporalData - struct containing all relevant data of this time-step
+%			temporalData - cell array of n*2 containing structs of containing all relevant data from previous time-step
+% OUTPUTS: 	updatedtemporalData - cell array of n*2 containing structs of containing all relevant data of this time-step
 %			stickLoc - array of stickLoc struct for each point of interest (usually 2)
 %			stated in stickLoc(n).x, stickLoc(n).y, stickLoc(n).z
 
@@ -23,8 +23,17 @@ stickLoc = ADFindLocationsZ(frames, stickLoc, params);
 
 % estimate next state vector using current stickLoc and state vector
 % todo asaf - add parameter in temporalData specifiying if a state vector exists
-lastEstStateVector = temporalData.estStateVector;
-updatedTemporalData.estStateVector = ADMotionEstimation(lastEstStateVector, currentLocation);
+N = params.numOfSticks;
+
+updatedTemporalData = cell(N,1);
+for n = 1:N
+    if temporalData{n}.estimatedLocationExists
+        lastEstStateVector = temporalData{n}.estStateVector;
+        updatedTemporalData{n}.estStateVector = ADMotionEstimation(lastEstStateVector, stickLoc, params);
+    else
+        updatedTemporalData{n}.estStateVector = ADMotionEstimation([], stickLoc, params);
+    end
+end
 
 % debug dump
 if debug.enable

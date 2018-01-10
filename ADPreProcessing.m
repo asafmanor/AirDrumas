@@ -1,4 +1,4 @@
-function [ppFrame] = ADFunctionTemplate(frame, ,params)
+function [ppFrame] = ADPreProcessing(frame,params)
 % performs pre-processing of the frame for easier feature extraction
 % INPUTS: 	frame - on which we are working on
 %			params - parameters struct
@@ -7,17 +7,14 @@ function [ppFrame] = ADFunctionTemplate(frame, ,params)
 % debug struct
 global debug;
 ppFrame = frame;
-if params.pp.downscale.enable
-	ppFrame = imresize(ppFrame,2);
+if params.pp.resize.enable
+	ppFrame = imresize(ppFrame, params.pp.resize.resizeFactor);
 end
 if params.pp.gausssianFilter.enable
 	ppFrame = imgaussfilt(ppFrame, params.pp.gausssianFilter.sigma);
 end
 if params.pp.medianFilter.enable
 	ppFrame = medfilt2(ppFrame, params);
-end
-if params.pp.resizeFac.enable
-	ppFrame = imresize(ppFrame, params.pp.resizeFactor);
 end
 % debug dump
 if debug.enable

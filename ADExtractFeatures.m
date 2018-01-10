@@ -4,11 +4,11 @@ function [features] = ADExtractFeatures(frame, params)
 %			frame - of which we extract features from
 % OUTPUTS:	features - struct of features, some of them are matrices, some may be scalars.
 
-if strcmp(source_type, 'frame')
-	sobel                    = fspecial('sobel');
-	features.sobelHorizontal = imfilter(frame, sobel_h);
-	features.sobelVertical   = imfilter(frame, sobel_h.');
-	features.grad            = sqrt(features.sobel_horizontal.^2 + features.sobel_vertical.^2);
-	% TODO - add masks based on color / shape?
+if params.features.gray.enable
+	features.gray = rgb2gray(frame);
+	if params.features.grad.enable
+		features.grad = imgradient(features.gray); % sobel gradient
+	end
 end
+% TODO - add masks based on color / shape?
 end
