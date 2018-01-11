@@ -33,7 +33,7 @@ if strcmp(method, 'single')
 	params.crop_size = [100 100];
 
 	% stereo vision params
-	params.stereoCamerasCalib = struct(); % TODO call to stereo camera calibration 
+	params.calib = struct(); % TODO call to stereo camera calibration 
 end
 
 end

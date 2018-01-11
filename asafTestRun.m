@@ -24,9 +24,11 @@ for t=1:length(chosenFrames)
     debug.timestep = t;
     frames{1} = frameFromVid(workVideo1, t);
     frames{2} = frameFromVid(workVideo2, t);
-    location{t} = ADLocationPerTimestep(frames, params, temporalData);
-    
+    [temporalData, location{t}] = ADLocationPerTimestep(frames, params, temporalData);
 end
+
+% here we should implement the decision maker based on all locations.
+
 function frame = frameFromVid(video, timestep)
     frame = video(:,:,:,timestep);
 end

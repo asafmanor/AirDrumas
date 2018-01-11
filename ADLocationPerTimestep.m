@@ -1,8 +1,8 @@
 function [updatedTemporalData, stickLoc] = ADLocationPerTimestep(frames, params, temporalData)
 % given two frames acquired from the two cameras, and extra data extracted
 % from previous frames such as estimated stickLoc, this function runs all necessary 
-% processes such as pre-processing, stickLoc and depth extraction.
-% the function returns the stickLoc in terms of [x,y,z] of the two points of interest
+% processes such as pre-processing, stick location finding and depth extraction.
+% the function returns the stickLoc in terms of [x,y,z] of the points of interest
 % INPUTS: 	frames - cell array of frames extracted from main and slave cameras, respectively
 %			params - parameters struct
 %			temporalData - cell array of n*2 containing structs of containing all relevant data from previous time-step
@@ -11,7 +11,7 @@ function [updatedTemporalData, stickLoc] = ADLocationPerTimestep(frames, params,
 %			stated in stickLoc(n).x, stickLoc(n).y, stickLoc(n).z
 
 % important assumptions: this function is called after stereo cameras have been calibrated.
-% calibration object is stored in params.stereoCamerasCalib
+% calibration object is stored in params.calib
 
 global debug;
 % pre-process, extract features

@@ -6,11 +6,13 @@ function [stickLoc] = ADFindLocationsZ(frames, stickLoc, params)
 % OUTPUTS: 	stickLoc - stickLoc struct
 
 % parse inputs
-for n = 1:params.numOfSticks
+N = params.numOfSticks;
+x = zeros(N,1); y = zeros(N,1);
+for n = 1:N
 	x(n) = stickLoc{n}.x;
 	y(n) = stickLoc{n}.y;
 end
-stereoCamerasCalib = params.stereoCamerasCalib;
+calib = params.calib;
 
 % debug struct
 global debug;
