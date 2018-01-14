@@ -4,6 +4,10 @@ function [features] = ADExtractFeatures(frame, params)
 %			frame - of which we extract features from
 % OUTPUTS:	features - struct of features, some of them are matrices, some may be scalars.
 
+% TODO asaf - probably no real use of this function. consider deleting,
+% since it operates on the whole frame and is costly in time.
+features = struct();
+
 if params.features.gray.enable
 	features.gray = rgb2gray(frame);
 	if params.features.grad.enable

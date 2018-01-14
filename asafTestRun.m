@@ -1,6 +1,6 @@
-clear ; clc ; close all;
+clear ; close all;
 global debug;
-debug.enable = false;
+debug.enable = true;
 
 load('data_capture_2.mat');
 % load prameters
@@ -13,20 +13,21 @@ workVideo2 = B(:,:,:,chosenFrames);
 % initialize temporal data
 N = params.numOfSticks;
 temporalData = cell(N,1);
-for n=1:2
+for n=1:N
     temporalData{n}.estimatedLocationExists = false;
 end
 
 %% find (x,y,z) locations
-clc;
 location = cell(length(chosenFrames),1);
+tic
 for t=1:length(chosenFrames)
     debug.timestep = t;
+    % extract timesteps
     frames{1} = frameFromVid(workVideo1, t);
     frames{2} = frameFromVid(workVideo2, t);
     [temporalData, location{t}] = ADLocationPerTimestep(frames, params, temporalData);
 end
-
+toc
 % here we should implement the decision maker based on all locations.
 
 function frame = frameFromVid(video, timestep)

@@ -15,7 +15,7 @@ if strcmp(method, 'single')
 	params.numOfSticks = 2;
 
 	% pre-processing params
-	params.pp.gausssianFilter.enable = true;
+	params.pp.gausssianFilter.enable = false;
 	params.pp.gausssianFilter.sigma = 0.5;
 	params.pp.medianFilter.enable = false;
 	params.pp.medianFilter.kernel = [3 3];
@@ -23,12 +23,13 @@ if strcmp(method, 'single')
 	params.pp.resize.resizeFactor = 1/2;
 
 	% feature extraction params
-	params.features.grad.enable = true;
-	params.features.gray.enable = true;
-	params.features.edge.enable = false;
+	params.features.grad.enable = false;
+	params.features.gray.enable = false;
 
+	% xy location params
+	params.xy.maskTh = 30;
 	% kalman filter params
-	params.kalman.enable = true;
+	params.kalman.enable = false;
 	params.searchPatchSize = [100 100]; % patch size surrounding approximated center
 	params.crop_size = [100 100];
 

@@ -18,14 +18,14 @@ global debug;
 pp_frames = cellfun(@(x) ADPreProcessing(x, params), frames, 'UniformOutput', false);
 features  = cellfun(@(x) ADExtractFeatures(x, params), frames, 'UniformOutput', false);
 % find current stickLoc in (x,y)
-stickLoc = ADFindLocationsXY(frames(1), temporalData, params);
-stickLoc = ADFindLocationsZ(frames, stickLoc, params);
+stickLoc = ADFindLocationsXY(pp_frames{1}, temporalData, params);
+stickLoc = ADFindLocationsZ(pp_frames, stickLoc, params);
 
 % estimate next state vector using current stickLoc and state vector
 % todo asaf - add parameter in temporalData specifiying if a state vector exists
 N = params.numOfSticks;
 
-updatedTemporalData = cell(N,1);
+updatedTemporalData = temporalData;
 for n = 1:N
     if temporalData{n}.estimatedLocationExists
         lastEstStateVector = temporalData{n}.estStateVector;
@@ -38,9 +38,9 @@ end
 % debug dump
 if debug.enable
 	t = debug.timestep;
-	debug.pp_frames(t) = pp_frames;
-	debug.stickLoc(t) = stickLoc;
-	debug.features(t) = features;
+	debug.pp_frames{t} = pp_frames;
+	debug.stickLoc{t} = stickLoc;
+	debug.features{t} = features;
 end
 
 end
