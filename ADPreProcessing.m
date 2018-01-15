@@ -16,8 +16,4 @@ end
 if params.pp.medianFilter.enable
 	ppFrame = medfilt2(ppFrame, params);
 end
-% debug dump
-if debug.enable
-end
-
 end

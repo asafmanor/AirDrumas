@@ -12,10 +12,7 @@ workVideo2 = B(:,:,:,chosenFrames);
 
 % initialize temporal data
 N = params.numOfSticks;
-temporalData = cell(N,1);
-for n=1:N
-    temporalData{n}.estimatedLocationExists = false;
-end
+temporalData.estimatedLocationExists = false;
 
 %% find (x,y,z) locations
 location = cell(length(chosenFrames),1);

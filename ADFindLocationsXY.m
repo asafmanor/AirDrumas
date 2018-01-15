@@ -2,18 +2,18 @@ function [stickLoc] = ADFindLocationsXY(frame, temporalData, params)
 % returns stickLoc(n).x and stickLoc(n).y for n sticks (usually 2)
 % INPUTS: 	frame - from main camera
 %			params - parameters struct
-%			temporalData - cell array of n*2 containing structs of containing all relevant data from previous time-step
+%			temporalData - struct containing all relevant data from previous time-step
 % OUTPUTS: 	stickLoc - stickLoc struct
 
 % parse estimated location
 N = params.numOfSticks;
 stickLoc = cell(N,1);
-if false && temporalData{n}.estimatedLocationExists % test - asaf: wrote false so we never go here 
+if temporalData.estimatedLocationExists
     imageCrop = cell(N,1);
     for n = 1:N
 		% crop around estimated location
-		x = temporalData.estStateVector(n).x;
-        y = temporalData.estStateVector(n).y;
+		x = temporalData.estStateVector{n}.x;
+        y = temporalData.estStateVector{n}.y;
 		imageCrop{n} = CropImage(frame, [x y], params);
 		% TODO - find new location in crop
     end
