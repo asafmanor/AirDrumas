@@ -1,4 +1,4 @@
-function [updatedTemporalData, stickLoc] = ADLocationPerTimestep(frames, params, temporalData)
+function [stickLoc] = ADLocationPerTimestep(frames, params)
 % given two frames acquired from the two cameras, and extra data extracted
 % from previous frames such as estimated stickLoc, this function runs all necessary 
 % processes such as pre-processing, stick location finding and depth extraction.
@@ -16,31 +16,14 @@ function [updatedTemporalData, stickLoc] = ADLocationPerTimestep(frames, params,
 global debug;
 % pre-process, extract features
 pp_frames = cellfun(@(x) ADPreProcessing(x, params), frames, 'UniformOutput', false);
-% find current stickLoc in (x,y)
-stickLoc = ADFindLocationsXY(pp_frames{1}, temporalData, params);
-stickLoc = ADFindLocationsZ(pp_frames, stickLoc, params);
-
-% estimate next state vector using current stickLoc and state vector
-N = params.numOfSticks;
-
-updatedTemporalData = temporalData;
-if temporalData.estimatedLocationExists
-    for n = 1:N
-        lastEstStateVector = temporalData.estStateVector{n};
-        updatedTemporalData.estStateVector{n} = ADMotionEstimation(lastEstStateVector, stickLoc, params);
-    end
-else
-    for n = 1:N
-        updatedTemporalData.estStateVector{n} = ADMotionEstimation([], stickLoc, params);
-    end
-end
+% find current stickLoc in (x,y, shift)
+stickLoc = ADFindLocationsXY(pp_frames{1}, params);
 
 % debug dump
 if debug.enable
 	t = debug.timestep;
 	debug.pp_frames{t} = pp_frames;
 	debug.stickLoc{t} = stickLoc;
-	debug.features{t} = features;
 end
 
 end
