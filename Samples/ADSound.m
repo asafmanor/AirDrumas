@@ -1,12 +1,12 @@
-function ADSound(sound,kit)
+function ADSound(drumSound,kit)
 % This function plays drums sounds
 % INPUTS: 	soundL - The sound from the left stick
 %			soundR - The sound from the right stick
 % OUTPUTS: 	result - sound
 
 % function body
-soundL=sound(1);
-soundR=sound(2);
+soundL=drumSound(1);
+soundR=drumSound(2);
 drums='012345';
 kits='012';
 readR='00.wav';

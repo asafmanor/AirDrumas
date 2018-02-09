@@ -23,6 +23,10 @@ params.pp.resize.resizeFactor = 1/2;
 
 % xy location params
 params.xy.maskTh = 30;
+% z location params
+params.hightH = 70;
+params.hightL = 30;
+params.hightL = 10;
 
 % kalman filter params
 params.kalman.enable = false;

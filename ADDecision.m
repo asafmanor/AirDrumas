@@ -1,4 +1,4 @@
-function [sound,state] = ADDecision(sticklocation,params,state)
+function [drumSound,state] = ADDecision(sticklocation,params,state)
 % 
 % INPUTS: 	sticklocation-the location of the sticks
 %           params-parameters for calculations
