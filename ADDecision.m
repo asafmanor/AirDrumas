@@ -1,4 +1,4 @@
-function [sound,state] = ADDecision(sticklocation,params,state)
+function [drumSound,state] = ADDecision(sticklocation,params,state)
 % 
 % INPUTS: 	sticklocation-the location of the sticks
 %           params-parameters for calculations
@@ -48,10 +48,10 @@ for i =1:n
         elseif (location(i)>hightL-hightM)&& (location(i)<hightL+hightM)
             %snar check
             if (location(i,1)>(gridsizex/4))&& (location(i,1)<(gridsizex/2))
-                sound(i)=2;
+                sound(i)=0;
             %floor check
             elseif (location(i,1)>(gridsizex/2))
-                sound(i)=3;
+                sound(i)=1;
             else
                 sound(i)=9;
                 state.flag(i)=0;
