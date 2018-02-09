@@ -30,9 +30,9 @@ params.crop_size = params.pp.resize.resizeFactor*[100 100];
 
 % stereo vision params
 try
-    params.calib = load('stereoParams.mat');
+    params.stereoParames = load('stereoParams.mat');
 catch
-    params.calib = struct();
+    params.stereoParames = struct();
     warning('stereoParams.mat does not exist!');
 end
 

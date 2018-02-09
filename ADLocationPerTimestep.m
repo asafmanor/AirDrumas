@@ -5,7 +5,6 @@ function [stickLoc] = ADLocationPerTimestep(frames, params)
 % the function returns the stickLoc in terms of [x,y,z] of the points of interest
 % INPUTS: 	frames - cell array of frames extracted from main and slave cameras, respectively
 %			params - parameters struct
-%			temporalData - struct containing all relevant data from previous time-step
 % OUTPUTS: 	updatedtemporalData - struct containing all relevant data of this time-step
 %			stickLoc - array of stickLoc struct for each point of interest (usually 2)
 %			stated in stickLoc(n).x, stickLoc(n).y, stickLoc(n).z
@@ -16,8 +15,9 @@ function [stickLoc] = ADLocationPerTimestep(frames, params)
 global debug;
 % pre-process, extract features
 pp_frames = cellfun(@(x) ADPreProcessing(x, params), frames, 'UniformOutput', false);
-% find current stickLoc in (x,y, shift)
-stickLoc = ADFindLocationsXY(pp_frames{1}, params);
+[rect_frames{2}, rect_frames{1}] = rectifyStereoImages(pp_frames{2}, pp_frames{1}, params.stereoParames);
+
+stickLoc = cellfun(@(x) ADFindLocationsXY(x, params), rect_frames, 'UniformOutput', false);
 
 % debug dump
 if debug.enable

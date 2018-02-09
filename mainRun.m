@@ -2,32 +2,32 @@ clear ; close all;
 global debug;
 debug.enable = false;
 
-params = ADLoadParams('single');
-cams(1) = webcam(2);
-cams(2) = webcam(3);
+params = ADLoadParams();
 
-input('Please sit in the drummer\'s chair and hold the sticks at waist height. press any key to continue');
-for t=1:params.framesForHeightCalibration
-	frames{1} = snapshot(cams(1));
-	frames{2} = snapshot(cams(2));
-	% TODO asaf - add averging of height
+camL = webcam(2);
+camR = webcam(3);
+
+startLiveVid();
+%    location = ADLocationPerTimestep(frames, params, temporalData);
+
+function startLiveRun()
+global KEY_IS_PRESSED
+KEY_IS_PRESSED = 0;
+gcf
+set(gcf, 'KeyPressFcn', @myKeyPressFcn)
+while ~KEY_IS_PRESSED
+      drawnow
+      frameL = snapshot(camL);
+      frameR = snapshot(camR);
+	  stickLocation = ADLocationPerTimestep(frames, params);
+	  [drumSound, drumState] = ADDecision(stickLoc, params, drumState);
+
 end
-% initialize temporal data
-N = params.numOfSticks;
-
-%% find (x,y,z) locations
-location = cell(length(chosenFrames),1);
-profile on
-for t=1:length(chosenFrames)
-    debug.timestep = t;
-    % extract timesteps
-    frames{1} = frameFromVid(workVideo1, t);
-    frames{2} = frameFromVid(workVideo2, t);
-    [temporalData, location{t}] = ADLocationPerTimestep(frames, params, temporalData);
+disp('Run Finished! Hope you had a jolly good time')
 end
-profile viewer
-% here we should implement the decision maker based on all locations.
 
-function frame = frameFromVid(video, timestep)
-    frame = video(:,:,:,timestep);
+function myKeyPressFcn(hObject, event)
+global KEY_IS_PRESSED
+KEY_IS_PRESSED  = 1;
+disp('key is pressed')
 end
