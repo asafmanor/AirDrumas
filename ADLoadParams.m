@@ -10,7 +10,7 @@ function [params] = ADLoadParams()
 % load default parameters
 
 % load parameters per dataset (may override defaults)
-params.numOfSticks = 2;
+params.numOfSticks = 1;
 params.framesForHeightCalibration = 10;
 
 % pre-processing params
@@ -19,7 +19,7 @@ params.pp.gausssianFilter.sigma = 0.5;
 params.pp.medianFilter.enable = false;
 params.pp.medianFilter.kernel = [3 3];
 params.pp.resize.enable = true;
-params.pp.resize.resizeFactor = 1/2;
+params.pp.resize.resizeFactor = 1/4;
 
 % xy location params
 params.xy.maskTh = 30;
@@ -32,11 +32,13 @@ params.hightL = 10;
 params.kalman.enable = false;
 params.crop_size = params.pp.resize.resizeFactor*[100 100];
 
+params.kit = 0;
 % stereo vision params
 try
-    params.stereoParames = load('stereoParams.mat');
+    temp = load('stereoParams.mat');
+    params.stereoParams = temp.stereoParams;
 catch
-    params.stereoParames = struct();
+    params.stereoParams = struct();
     warning('stereoParams.mat does not exist!');
 end
 

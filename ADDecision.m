@@ -31,33 +31,33 @@ for i =1:n
         %hat check
         if (location(i,2) > gridsizey/2) && (location(i)>hightH-hightM)&& (location(i)<hightH+hightM)
             if (location(i,1)<(gridsizex/4))&& (location(i,2) > gridsizey/2) 
-                sound(i)=4;
+                drumSound(i)=4;
             %tam1 check
             elseif (location(i,1)>(gridsizex/4))&& (location(i,1)<(gridsizex/2))&& (location(i,2) > gridsizey/2)
-                sound(i)=2;
+                drumSound(i)=2;
             %tam2 check
             elseif (location(i,1)>(gridsizex/2))&& (location(i,1)<(3*gridsizex/4))&& (location(i,2) > gridsizey/2)
-                sound(i)=3;
+                drumSound(i)=3;
             %crash check
             elseif (location(i,1)>(3*gridsizex/4))&& (location(i,2) > gridsizey/2)
-                sound(i)=5;
+                drumSound(i)=5;
             else 
-                sound(i)=9;
+                drumSound(i)=9;
                 state.flag(i)=0;
             end
         elseif (location(i)>hightL-hightM)&& (location(i)<hightL+hightM)
             %snar check
             if (location(i,1)>(gridsizex/4))&& (location(i,1)<(gridsizex/2))
-                sound(i)=0;
+                drumSound(i)=0;
             %floor check
             elseif (location(i,1)>(gridsizex/2))
-                sound(i)=1;
+                drumSound(i)=1;
             else
-                sound(i)=9;
+                drumSound(i)=9;
                 state.flag(i)=0;
             end 
         else
-            sound(i)=9;
+            drumSound(i)=9;
             state.flag(i)=0;            
         end
     end

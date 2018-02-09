@@ -15,9 +15,10 @@ function [stickLoc] = ADLocationPerTimestep(frames, params)
 global debug;
 % pre-process, extract features
 pp_frames = cellfun(@(x) ADPreProcessing(x, params), frames, 'UniformOutput', false);
-[rect_frames{2}, rect_frames{1}] = rectifyStereoImages(pp_frames{2}, pp_frames{1}, params.stereoParames);
+[rect_frames{2}, rect_frames{1}] = rectifyStereoImages(pp_frames{2}, pp_frames{1}, params.stereoParams);
 
 stickLoc = cellfun(@(x) ADFindLocationsXY(x, params), rect_frames, 'UniformOutput', false);
+stickLoc = ADFindShift(stickLoc, params);
 
 % debug dump
 if debug.enable
