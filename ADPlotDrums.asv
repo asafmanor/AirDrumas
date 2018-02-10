@@ -1,7 +1,12 @@
-function ADPlotDrums(f,params)
+function ADPlotDrums(fig,params)
 %UNTITLED2 Summary of this function goes here
 %   Detailed explanation goes here
+for drumInd = 1:6
+    centers(drumInd,:) = [params.drums{drumInd}.x params.drums{drumInd}.y params.drums{drumInd}.shift];
+    radii(drumInd) = params.drumR;
+end
 
+fig = viscircles(centers,radii);
 
 end
 
