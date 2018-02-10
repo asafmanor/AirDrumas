@@ -2,10 +2,11 @@ clear ; close all;
 global debug;
 debug.enable = false;
 
-camL = webcam(3);
-camR = webcam(2);
+camL = 1;
+camR = 2;
+numOfimages = 15;
 
-ADRecordCalibrationImages(camL, camR)
+ADRecordCalibrationImages(camL, camR, numOfimages)
 
 % use stereoCalibration app for extracting stereoParams object
 
