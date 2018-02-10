@@ -7,11 +7,11 @@ debug.enable = false;
 params = ADLoadParams();
 addpath('Samples');
 runMode = 'live';
-params = quickDrumLocations(params);
+params = quickSystemAssembly(params);
 
 if strcmp(runMode, 'live')
-	camL = webcam(3);
 	camR = webcam(2);
+	camL = webcam(3);
 	input('Press any key when ready to init ');
     %ADInitializeRecordingSession(camR, camL, params)
 
@@ -23,7 +23,6 @@ if strcmp(runMode, 'live')
 
 	gcf
 	set(gcf, 'KeyPressFcn', @myKeyPressFcn)
-    preview(camL);
     preview(camR);
 	while ~KEY_IS_PRESSED
 %         tic
@@ -39,7 +38,7 @@ if strcmp(runMode, 'live')
         end
 	    %[drumSound, drumState] = ADDecision(stickLoc, params, drumState);
 	    [drumSound, lastLoc] = ADDecision2(stickLoc, params, lastLoc);
-	    ADSound(drumSound, params.kit);
+	    ADSound2(drumSound, params);
     end
     close;
 	disp('Run Finished! Hope you had a jolly good time')
