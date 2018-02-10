@@ -1,6 +1,4 @@
-function params = quickSystemAssembly(params)
-camR = webcam(2);
-camL = webcam(3);
+function params = quickSystemAssembly(params, camR, camL)
 preview(camR);
 preview(camL);
 originalNumOfSticks = params.numOfSticks;

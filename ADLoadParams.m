@@ -4,9 +4,10 @@ function [params] = ADLoadParams()
 
 % OUTPUTS:  params: parameters struct
 
-params.numOfSticks = 2;
+params.numOfSticks = 1;
 params.numOfDrums = 4;
 params.kit = 0;
+params.origFrameSize = [1280 720];
 
 [params.drums{1}.Sound params.drums{1}.fs] = audioread('Samples/00.wav'); % snare
 [params.drums{2}.Sound params.drums{2}.fs] = audioread('Samples/04.wav'); % hi-hat
@@ -30,7 +31,7 @@ params.xmargin = 20;
 params.ymargin = 20;
 params.zmargin = 5;
 params.margin = 0;
-params.drumR = 30; % drum radius for decision type #2
+params.drumR = 50; % drum radius for decision type #2
 
 for n =1:6
     params.drums{n}.x = 0;
