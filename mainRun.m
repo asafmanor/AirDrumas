@@ -7,6 +7,7 @@ addpath('Samples');
 
 camL = webcam(2);
 camR = webcam(3);
+ADInitializeRecordingSession(camR, camL, params)
 
 input('Press any key when ready');
 
