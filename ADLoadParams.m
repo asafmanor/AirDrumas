@@ -10,7 +10,7 @@ function [params] = ADLoadParams()
 % load default parameters
 
 % load parameters per dataset (may override defaults)
-params.numOfSticks = 1;
+params.numOfSticks = 2;
 params.framesForHeightCalibration = 10;
 
 % pre-processing params
@@ -22,7 +22,7 @@ params.pp.resize.enable = true;
 params.pp.resize.resizeFactor = 1/4;
 
 % xy location params
-params.xy.redMaskTh = 40;
+params.xy.redMaskTh = 55;
 params.xy.blueMaskTh = -20;
 %  location params
 params.xmargin = 70;

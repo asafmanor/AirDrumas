@@ -10,7 +10,7 @@ if strcmp(runMode, 'live')
 	camL = webcam(3);
 	camR = webcam(2);
 	input('Press any key when ready to init ');
-  ADInitializeRecordingSession(camR, camL, params)
+    %ADInitializeRecordingSession(camR, camL, params)
 
 	% init state for drum machine 
 	frames{2} = snapshot(camL); % #2 is left camera!
@@ -29,7 +29,10 @@ if strcmp(runMode, 'live')
 	    frames{1} = snapshot(camR);
 	    stickLoc = ADLocationPerTimestep(frames, params);
         if stickLoc{1}.found
-            fprintf('stick #1: x = %.1f, y = %.1f, shift = %.3f\n', stickLoc{1}.x, stickLoc{1}.y, stickLoc{1}.shift);
+            fprintf('stick #1: x = %.1f, y = %.1f, shift = %3.3f\n', stickLoc{1}.x, stickLoc{1}.y, stickLoc{1}.shift);
+        end
+        if stickLoc{2}.found
+            fprintf('stick #2: x = %.1f, y = %.1f, shift = %3.3f\n', stickLoc{2}.x, stickLoc{2}.y, stickLoc{2}.shift);
         end
 	    %[drumSound, drumState] = ADDecision(stickLoc, params, drumState);
 	    %ADSound(drumSound, params.kit);
