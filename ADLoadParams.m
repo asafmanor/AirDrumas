@@ -22,22 +22,16 @@ params.pp.resize.enable = true;
 params.pp.resize.resizeFactor = 1/4;
 
 % xy location params
-params.xy.maskTh = 30;
-% location params
-params.xmrgin = 70;
-params.ymargin = 30;
-params.zmargin = 10;
-params.margin = 5;
-for i =1:6
-    params.drums{i}.x=0;
-    params.drums{i}.y=0;
-    params.drums{i}.shift=0;
-end
-% kalman filter params
-params.kalman.enable = false;
-params.crop_size = params.pp.resize.resizeFactor*[100 100];
+params.xy.redMaskTh = 40;
+params.xy.blueMaskTh = -20;
+% z location params
 
+% sound params
+params.hightH = 70;
+params.hightL = 30;
+params.hightL = 10;
 params.kit = 0;
+params.margin = 5;
 % stereo vision params
 try
     temp = load('stereoParams.mat');

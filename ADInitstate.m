@@ -3,9 +3,9 @@ function [state] = ADInitstate(frames ,params)
 %  
 % OUTPUTS: 	state - this struct rember the previous state
 
-sticklocation = ADLocationPerTimestep(frames, params);
-n=params.numOfSticks;
-for i =1:n
+[sticklocation, numOfSticksFound] = ADLocationPerTimestep(frames, params);
+
+for i =1:numOfSticksFound
     state.sticklocation{i}.shift=sticklocation{i}.shift;
     state.sticklocation{i}.x=sticklocation{i}.x;
     state.sticklocation{i}.y=sticklocation{i}.y;
