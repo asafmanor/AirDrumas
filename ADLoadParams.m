@@ -27,6 +27,7 @@ params.xy.maskTh = 30;
 params.hightH = 70;
 params.hightL = 30;
 params.hightL = 10;
+params.margin = 5;
 
 % kalman filter params
 params.kalman.enable = false;
