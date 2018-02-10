@@ -1,4 +1,4 @@
-function [drumSound,state] = ADDecision(sticklocation,params,state,n)
+function [drumSound,state] = ADDecision(sticklocation,params,state)
 % 
 % INPUTS: 	sticklocation-the location of the sticks
 %           params-parameters for calculations
@@ -8,11 +8,13 @@ function [drumSound,state] = ADDecision(sticklocation,params,state,n)
 location=[];
 %unpack location
 drumSound=[9,9];
+n=params.numOfSticks;
 if n>=1
   for i =1:n
         if sticklocation{i}.found ==1
             loc=[sticklocation{i}.x,sticklocation{i}.y,sticklocation{i}.shift];
             location=[location;loc];
+            state.sticklocation{i}=sticklocation{i};
         else
             n=n-1;
         end
@@ -43,7 +45,6 @@ if n>=1
                end
             end
         end
-    state.sticklocation=sticklocation;
     end
 end
 end
