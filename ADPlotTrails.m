@@ -1,4 +1,4 @@
-function ADPlotTrails( locR, locB )
+function ADPlotTrails(locR,locB)
 %This function plots the 3D trails of the Blue and Red sticks. 
 %trailR and trailB are arrays containing the last trailLen locations.
 %The function uses locR and locB to update trailR and trailB respectively
