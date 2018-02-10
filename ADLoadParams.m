@@ -10,7 +10,7 @@ function [params] = ADLoadParams()
 % load default parameters
 
 % load parameters per dataset (may override defaults)
-params.numOfSticks = 1;
+params.numOfSticks = 2;
 params.framesForHeightCalibration = 10;
 
 % pre-processing params
@@ -22,18 +22,22 @@ params.pp.resize.enable = true;
 params.pp.resize.resizeFactor = 1/4;
 
 % xy location params
-params.xy.maskTh = 30;
-% z location params
-params.hightH = 70;
-params.hightL = 30;
-params.hightL = 10;
+params.xy.redMaskTh = 55;
+params.xy.blueMaskTh = -20;
+%  location params
+params.xmargin = 70;
+params.ymargin = 30;
+params.zmargin = 10;
 params.margin = 5;
 
-% kalman filter params
-params.kalman.enable = false;
-params.crop_size = params.pp.resize.resizeFactor*[100 100];
-
+for i =1:6
+    params.drums{i}.x=0;
+    params.drums{i}.y=0;
+    params.drums{i}.shift=0;
+end
+% sound params
 params.kit = 0;
+
 % stereo vision params
 try
     temp = load('stereoParams.mat');
