@@ -9,10 +9,17 @@ location=[];
 %unpack location
 drumSound=[9,9];
 if n>=1
-    for i =1:n
-    loc=[sticklocation{i}.x,sticklocation{i}.y,sticklocation{i}.shift];
-    location=[location;loc];
-    end
+  for i =1:n
+        if sticklocation{i}.found ==1
+            loc=[sticklocation{i}.x,sticklocation{i}.y,sticklocation{i}.shift];
+            location=[location;loc];
+        else
+            n=n-1;
+        end
+            
+  end
+end
+if n>=1
     %coefficients
     hightH=params.hightH;
     hightL=params.hightL;
