@@ -1,6 +1,6 @@
 Kit:'Acoustic'=0
 Sounds:
-snair = 0
+snare = 0
 floor= 1
 tam1=2
 tam2=3
@@ -9,7 +9,7 @@ crash=5
 base=6?
 
 Kit:'Electro'=1
-snair=0
+snare=0
 Kick=1
 tam1=2
 tam2=3

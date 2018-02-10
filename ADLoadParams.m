@@ -1,17 +1,17 @@
 function [params] = ADLoadParams()
 % loads all the default parameters that should be inserted by the user.
 % this is the only part where the user should intervene and make changes.
-% for example, 'stream' method will set the parameters to decrease quality
-% in favor of improved run-time.
-% INPUTS: 	method: 'single' for one/several shot experiments,
-%					'stream' for a live stream of frames
+
 % OUTPUTS:  params: parameters struct
 
-% load default parameters
+params.numOfSticks = 2;
+params.numOfDrums = 4;
+params.kit = 0;
 
-% load parameters per dataset (may override defaults)
-params.numOfSticks = 1;
-params.framesForHeightCalibration = 10;
+[params.drums{1}.Sound params.drums{1}.fs] = audioread('Samples/00.wav'); % snare
+[params.drums{2}.Sound params.drums{2}.fs] = audioread('Samples/04.wav'); % hi-hat
+[params.drums{3}.Sound params.drums{3}.fs] = audioread('Samples/05.wav'); % ride
+[params.drums{4}.Sound params.drums{4}.fs] = audioread('Samples/Kick006.wav'); % bass-drum
 
 % pre-processing params
 params.pp.gausssianFilter.enable = false;
@@ -24,19 +24,19 @@ params.pp.resize.resizeFactor = 1/4;
 % xy location params
 params.xy.redMaskTh = 55;
 params.xy.blueMaskTh = -20;
-%  location params
+
+% drum kit params
 params.xmargin = 20;
 params.ymargin = 20;
 params.zmargin = 5;
 params.margin = 0;
+params.drumR = 30; % drum radius for decision type #2
 
-for i =1:6
-    params.drums{i}.x=0;
-    params.drums{i}.y=0;
-    params.drums{i}.shift=0;
+for n =1:6
+    params.drums{n}.x = 0;
+    params.drums{n}.y = 0;
+    params.drums{n}.shift = 0;
 end
-% sound params
-params.kit = 0;
 
 % stereo vision params
 try
@@ -46,5 +46,4 @@ catch
     params.stereoParams = struct();
     warning('stereoParams.mat does not exist!');
 end
-
 end
