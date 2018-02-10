@@ -1,4 +1,4 @@
-function [drumSound,state] = ADDecision(sticklocation,params,state,n)
+function [drumSound,state] = ADDecision(sticklocation,params,state)
 % 
 % INPUTS: 	sticklocation-the location of the sticks
 %           params-parameters for calculations
@@ -8,17 +8,20 @@ function [drumSound,state] = ADDecision(sticklocation,params,state,n)
 location=[];
 %unpack location
 drumSound=[9,9];
+n=params.numOfSticks;
 if n>=1
-    for i =1:n
-    loc=[sticklocation{i}.x,sticklocation{i}.y,sticklocation{i}.shift];
-    location=[location;loc];
-    end
-    %coefficients
-    hightH=params.hightH;
-    hightL=params.hightL;
-    hightM=params.hightM;
-    gridsizex=1280*params.pp.resize.resizeFactor;
-    gridsizey=720*params.pp.resize.resizeFactor;
+  for i =1:n
+        if sticklocation{i}.found ==1
+            loc=[sticklocation{i}.x,sticklocation{i}.y,sticklocation{i}.shift];
+            location=[location;loc];
+            state.sticklocation{i}=sticklocation{i};
+        else
+            n=n-1;
+        end
+            
+  end
+end
+if n>=1
     %main code
     %clear flags if the stick is rising
     for i=1:n
@@ -30,41 +33,18 @@ if n>=1
 
     for i =1:n
         if state.flag(i)==0
-            state.flag(i)=1;
-            %hat check
-            if (location(i,2) > gridsizey/2) && (location(i)>hightH-hightM)&& (location(i)<hightH+hightM)
-                if (location(i,1)<(gridsizex/4))&& (location(i,2) > gridsizey/2) 
-                    drumSound(i)=4;
-                %tam1 check
-                elseif (location(i,1)>(gridsizex/4))&& (location(i,1)<(gridsizex/2))&& (location(i,2) > gridsizey/2)
-                    drumSound(i)=2;
-                %tam2 check
-                elseif (location(i,1)>(gridsizex/2))&& (location(i,1)<(3*gridsizex/4))&& (location(i,2) > gridsizey/2)
-                    drumSound(i)=3;
-                %crash check
-                elseif (location(i,1)>(3*gridsizex/4))&& (location(i,2) > gridsizey/2)
-                    drumSound(i)=5;
-                else 
-                    drumSound(i)=9;
-                    state.flag(i)=0;
-                end
-            elseif (location(i)>hightL-hightM)&& (location(i)<hightL+hightM)
-                %snar check
-                if (location(i,1)>(gridsizex/4))&& (location(i,1)<(gridsizex/2))
-                    drumSound(i)=0;
-                %floor check
-                elseif (location(i,1)>(gridsizex/2))
-                    drumSound(i)=1;
-                else
-                    drumSound(i)=9;
-                    state.flag(i)=0;
-                end 
-            else
-                drumSound(i)=9;
-                state.flag(i)=0;            
+            for j=1:6
+               if params.drums{j}.x+params.xmargin>location(i,1) && location(i,1)>params.drums{j}.x-params.xmargin
+                   if params.drums{j}.y+params.ymargin>location(i,2) && location(i,2)>params.drums{j}.y-params.ymargin
+                        if params.drums{j}.shift+params.zmargin>location(i,3) && location(i,3)>params.drums{j}.shift-params.zmargin
+                        state.flag(i)=1;
+                        drumSound(i)=j;
+                        break;
+                        end
+                   end
+               end
             end
         end
-    state.sticklocation=sticklocation;
     end
 end
 end

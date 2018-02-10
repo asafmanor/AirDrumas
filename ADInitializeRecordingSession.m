@@ -32,7 +32,7 @@ while(stop)
 end
 disp(['The choosen treshold is: ', num2str(thr)]);
 params.xy.maskTh = thr;
-pause(2);
+input('Press any key to continue');
 
 
 numOfFrames = 5;
@@ -50,6 +50,7 @@ params.hightL = mean(tmpL);
 disp(['Low drum plane is ',num2str(params.hightL)])
 pause(2);
 
+input('Press any key to continue');
 disp('Please place one stick at the higher drum plane')
 pause(5);
 
