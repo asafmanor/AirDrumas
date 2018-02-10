@@ -25,9 +25,9 @@ params.pp.resize.resizeFactor = 1/4;
 params.xy.redMaskTh = 55;
 params.xy.blueMaskTh = -20;
 %  location params
-params.xmargin = 70;
-params.ymargin = 30;
-params.zmargin = 10;
+params.xmargin = 20;
+params.ymargin = 20;
+params.zmargin = 5;
 params.margin = 5;
 
 for i =1:6
