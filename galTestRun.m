@@ -12,6 +12,5 @@ clear all; close all;
 %%
 params = ADLoadParams();
 fig = 1;
-params.numOfDrums = 4;
 
 ADPlotDrums(fig,params);
