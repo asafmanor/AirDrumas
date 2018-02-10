@@ -1,4 +1,4 @@
-function [stickLoc, numOfSticksFound] = ADLocationPerTimestep(frames, params)
+function [stickLoc] = ADLocationPerTimestep(frames, params)
 % given two frames acquired from the two cameras, and extra data extracted
 % from previous frames such as estimated stickLoc, this function runs all necessary 
 % processes such as pre-processing, stick location finding and depth extraction.

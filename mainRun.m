@@ -5,6 +5,7 @@ debug.enable = false;
 params = ADLoadParams();
 addpath('Samples');
 runMode = 'live';
+params = quickDrumLocations(params);
 
 if strcmp(runMode, 'live')
 	camL = webcam(3);
@@ -15,7 +16,7 @@ if strcmp(runMode, 'live')
 	% init state for drum machine 
 	frames{2} = snapshot(camL); % #2 is left camera!
 	frames{1} = snapshot(camR);
-%	drumState = ADInitstate(frames, params);
+	drumState = ADInitstate(frames, params);
 	%% run!	
 
 	global KEY_IS_PRESSED
@@ -34,8 +35,8 @@ if strcmp(runMode, 'live')
         if stickLoc{2}.found
             fprintf('stick #2: x = %.1f, y = %.1f, shift = %3.3f\n', stickLoc{2}.x, stickLoc{2}.y, stickLoc{2}.shift);
         end
-	    %[drumSound, drumState] = ADDecision(stickLoc, params, drumState);
-	    %ADSound(drumSound, params.kit);
+	    [drumSound, drumState] = ADDecision(stickLoc, params, drumState);
+	    ADSound(drumSound, params.kit);
 %         toc
     end
     close;

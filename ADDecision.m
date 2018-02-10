@@ -38,7 +38,7 @@ if n>=1
                    if params.drums{j}.y+params.ymargin>location(i,2) && location(i,2)>params.drums{j}.y-params.ymargin
                         if params.drums{j}.shift+params.zmargin>location(i,3) && location(i,3)>params.drums{j}.shift-params.zmargin
                         state.flag(i)=1;
-                        drumSound(i)=j;
+                        drumSound(i)=j-1;
                         break;
                         end
                    end
