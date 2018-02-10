@@ -1,14 +1,15 @@
-function ADRecordCalibrationImages(camL, camR, params)
+function ADRecordCalibrationImages(camL, camR)
 % function description
 
 global debug;
 % function body
 root = pwd;
 formatOut = 'ddmmyy_HHMMSS';
-dateString = datestr(now,formatOut)
-folder = ['calibImages_',dateString]
+dateString = datestr(now,formatOut);
+folder = ['calibImages_',dateString];
 pathL = [root,'/CalibData/',folder,'/Left']
 pathR = [root,'/CalibData/',folder,'/Right']
+disp(['Recording session ended files may be found at folder ', folder]);
 
 disp('Start recording calibration images')
 numOfimages = 15;
@@ -23,7 +24,7 @@ for counter = [1:numOfimages]
     imwrite(right_im, [pathR,filename]);    
 
 end
-disp('Recording session ended')
+disp(['Recording session ended files may be found at folder ', folder]);
 
 % debug dump
 if debug.enable
