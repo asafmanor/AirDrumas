@@ -14,9 +14,9 @@ if n>=1
     for i =1:n
         if sticklocation{i}.found ==1
             for j=1:6
-               if params.drums{j}.x+params.xmargin>location(i,1) && location(i,1)>params.drums{j}.x-params.xmargin
-                   if params.drums{j}.y+params.ymargin>location(i,2) && location(i,2)>params.drums{j}.y-params.ymargin
-                        if params.drums{j}.shift+params.zmargin<state.sticklocation{i}.shift && location(i,3)<params.drums{j}.shift-params.zmargin
+               if params.drums{j}.x+params.xmargin>sticklocation{i}.x && sticklocation{i}.x>params.drums{j}.x-params.xmargin
+                   if params.drums{j}.y+params.ymargin>sticklocation{i}.y && sticklocation{i}.y>params.drums{j}.y-params.ymargin
+                        if params.drums{j}.shift+params.zmargin<state.sticklocation{i}.shift && sticklocation{i}.shift<params.drums{j}.shift-params.zmargin
                         drumSound(i)=j-1;
                         break;
                         end

@@ -10,7 +10,7 @@ function [params] = ADLoadParams()
 % load default parameters
 
 % load parameters per dataset (may override defaults)
-params.numOfSticks = 2;
+params.numOfSticks = 1;
 params.framesForHeightCalibration = 10;
 
 % pre-processing params
@@ -28,7 +28,7 @@ params.xy.blueMaskTh = -20;
 params.xmargin = 20;
 params.ymargin = 20;
 params.zmargin = 5;
-params.margin = 5;
+params.margin = 0;
 
 for i =1:6
     params.drums{i}.x=0;
