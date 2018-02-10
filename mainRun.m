@@ -10,6 +10,7 @@ if strcmp(runMode, 'live')
 	camL = webcam(3);
 	camR = webcam(2);
 	input('Press any key when ready to init ');
+  ADInitializeRecordingSession(camR, camL, params)
 
 	% init state for drum machine 
 	frames{2} = snapshot(camL); % #2 is left camera!
