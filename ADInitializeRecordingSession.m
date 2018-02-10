@@ -1,9 +1,5 @@
 function [params] = ADInitializeRecordingSession(camR, camL, params)
 
-% debug struct
-global debug;
-% function body
-
 % ++++++++++++++ record red threshold +++++++++++++++
 disp('Please place the two sticks in front of the camera');
 disp('Shoting image in 2 sec')
@@ -88,11 +84,5 @@ for drum=1:6
         ' shift: ', num2str(params.drums{drum}.shift)])
 end
 disp('All drums locations recorded successfully !')
-
-% debug dump
-if debug.enable
-	t = debug.timestep;
-	% debug.some_parameter = some_parameter;
-end
 
 end

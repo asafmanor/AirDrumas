@@ -4,8 +4,6 @@ function [ppFrame] = ADPreProcessing(frame,params)
 %			params - parameters struct
 % OUTPUTS: 	ppFrame - pre-processed frame, might be different size
 
-% debug struct
-global debug;
 ppFrame = frame;
 if params.pp.resize.enable
 	ppFrame = imresize(ppFrame, params.pp.resize.resizeFactor);

@@ -11,7 +11,6 @@ function [stickLoc] = ADLocationPerTimestep(frames, params)
 % important assumptions: this function is called after stereo cameras have been calibrated.
 % calibration object is stored in params.calib
 
-global debug;
 % pre-process, extract features
 pp_frames = cellfun(@(x) ADPreProcessing(x, params), frames, 'UniformOutput', false);
 [rect_frames{2}, rect_frames{1}] = rectifyStereoImages(pp_frames{2}, pp_frames{1}, params.stereoParams);
@@ -20,12 +19,5 @@ pp_frames = cellfun(@(x) ADPreProcessing(x, params), frames, 'UniformOutput', fa
 [stickLocLeft, sticksFoundRight]  = ADFindLocationsXY(rect_frames{2}, params);
 sticksFound = sticksFoundLeft .* sticksFoundRight; % a vector of two boolean elements
 stickLoc = ADFindShift({stickLocRight, stickLocLeft}, sticksFound);
-
-% debug dump
-if debug.enable
-	t = debug.timestep;
-	debug.pp_frames{t} = pp_frames;
-	debug.stickLoc{t} = stickLoc;
-end
 
 end
