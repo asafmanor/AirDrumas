@@ -1,0 +1,20 @@
+function params = quickDrumLocations(params)
+params.drums{1}.x=270;
+params.drums{1}.y=35;
+params.drums{1}.shift=71;
+params.drums{2}.x=150;
+params.drums{2}.y=27;
+params.drums{2}.shift=76;
+params.drums{3}.x=271;
+params.drums{3}.y=96;
+params.drums{3}.shift=74;
+params.drums{4}.x=139;
+params.drums{4}.y=71;
+params.drums{4}.shift=81.7;
+params.drums{5}.x=294;
+params.drums{5}.y=72;
+params.drums{5}.shift=64;
+params.drums{6}.x=111;
+params.drums{6}.y=15.5;
+params.drums{6}.shift=77.4;
+end
