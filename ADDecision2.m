@@ -9,7 +9,7 @@ for n = 1:N
     for k = 1:params.numOfDrums
       if norm([stickLoc{n}.x stickLoc{n}.y] - [drums{k}.x drums{k}.y]) <= params.drumR &&...
         stickLoc{n}.shift <= drums{k}.shift && lastLoc{n}.shift > drums{k}.shift
-        drumSound(n) = k-1;
+        drumSound(n) = k;
         break;
       end
     end
