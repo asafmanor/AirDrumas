@@ -1,4 +1,4 @@
-function [stickLoc] = ADLocationPerTimestep(frames, params)
+function [stickLoc, numOfSticksFound] = ADLocationPerTimestep(frames, params)
 % given two frames acquired from the two cameras, and extra data extracted
 % from previous frames such as estimated stickLoc, this function runs all necessary 
 % processes such as pre-processing, stick location finding and depth extraction.
@@ -16,9 +16,10 @@ global debug;
 pp_frames = cellfun(@(x) ADPreProcessing(x, params), frames, 'UniformOutput', false);
 [rect_frames{2}, rect_frames{1}] = rectifyStereoImages(pp_frames{2}, pp_frames{1}, params.stereoParams);
 
-[stickLocRight, N1] = ADFindLocationsXY(rect_frames{1}, params);
-[stickLocLeft, N2]  = ADFindLocationsXY(rect_frames{2}, params);
-stickLoc = ADFindShift({stickLocRight, stickLocLeft}, min(N1,N2));
+[stickLocRight, sticksFoundLeft] = ADFindLocationsXY(rect_frames{1}, params);
+[stickLocLeft, sticksFoundRight]  = ADFindLocationsXY(rect_frames{2}, params);
+sticksFound = sticksFoundLeft .* sticksFoundRight; % a vector of two boolean elements
+stickLoc = ADFindShift({stickLocRight, stickLocLeft}, sticksFound);
 
 % debug dump
 if debug.enable
