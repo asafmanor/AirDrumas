@@ -1,4 +1,6 @@
 clear ; close all; clc;
+global KEY_IS_PRESSED
+KEY_IS_PRESSED = 0;
 global debug;
 debug.enable = false;
 
@@ -16,11 +18,9 @@ if strcmp(runMode, 'live')
 	% init state for drum machine 
 	frames{2} = snapshot(camL); % #2 is left camera!
 	frames{1} = snapshot(camR);
-	drumState = ADInitstate(frames, params);
-	%% run!	
+	lastLoc = ADInitState2(frames, params);
+	%% run!
 
-	global KEY_IS_PRESSED
-	KEY_IS_PRESSED = 0;
 	gcf
 	set(gcf, 'KeyPressFcn', @myKeyPressFcn)
     preview(camL);
@@ -37,7 +37,8 @@ if strcmp(runMode, 'live')
         if stickLoc{2}.found
             fprintf('stick #2: x = %.1f, y = %.1f, shift = %3.3f\n', stickLoc{2}.x, stickLoc{2}.y, stickLoc{2}.shift);
         end
-	    [drumSound, drumState] = ADDecision(stickLoc, params, drumState);
+	    %[drumSound, drumState] = ADDecision(stickLoc, params, drumState);
+	    [drumSound, lastLoc] = ADDecision2(stickLoc, params, lastLoc);
 	    ADSound(drumSound, params.kit);
     end
     close;
