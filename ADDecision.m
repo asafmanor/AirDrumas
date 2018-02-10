@@ -1,4 +1,4 @@
-function [drumSound,state] = ADDecision(sticklocation,params,state)
+function [drumSound,state] = ADDecisionOld2(sticklocation,params,state)
 % 
 % INPUTS: 	sticklocation-the location of the sticks
 %           params-parameters for calculations
@@ -23,28 +23,17 @@ if n>=1
 end
 if n>=1
     %main code
-    %clear flags if the stick is rising
-    for i=1:n
-    rise=state.sticklocation{i}.shift+params.margin-location(i,3);
-        if rise<=0
-            state.flag(i)=0;
-        end
-    end
-
     for i =1:n
-        if state.flag(i)==0
             for j=1:6
                if params.drums{j}.x+params.xmargin>location(i,1) && location(i,1)>params.drums{j}.x-params.xmargin
                    if params.drums{j}.y+params.ymargin>location(i,2) && location(i,2)>params.drums{j}.y-params.ymargin
-                        if params.drums{j}.shift+params.zmargin>location(i,3) && location(i,3)>params.drums{j}.shift-params.zmargin
-                        state.flag(i)=1;
+                        if params.drums{j}.shift+params.zmargin<state.sticklocation{i}.shift && location(i,3)<params.drums{j}.shift-params.zmargin
                         drumSound(i)=j-1;
                         break;
                         end
                    end
                end
             end
-        end
     end
 end
 end
