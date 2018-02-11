@@ -13,13 +13,20 @@ radii   = 30*ones(4,1)*params.pp.resize.resizeFactor;
 
 
 % for drumInd = 1:params.numOfDrums
-%     centers(drumInd,:) = [params.drums{drumInd}.x params.drums{drumInd}.y params.drums{drumInd}.shift];
+%     centers(drumInd,:) = [params.drums{drumInd}.x params.drums{drumInd}.y 1/params.drums{drumInd}.shift];
 %     radii(drumInd) = params.drumR;
 % end
 
-scatter(canters(1),);
-fig = viscircles(centers(:,[1 2]),radii,'full');
-axis(imBounds);
+drums = zeros(imSize);
+drums = insertShape(drums,'FilledCircle',[centers(:,1) centers(:,2) radii]);
+imagesc(drums);
+
+% for drumInd = 1:params.numOfDrums
+%     hold on;
+%     fig = ADPlotDrum(fig,centers(drumInd,:),radii(drumInd),'red'); 
+% end
+% hold off;
+% axis(imBounds);
 
 end
 
