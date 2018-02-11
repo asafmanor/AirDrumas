@@ -1,4 +1,4 @@
-function [stickLoc] = ADLocationPerTimestep(frames, params)
+function [stickLoc] = ADLocationPerTimestep(frames, params, displayAnaglyph)
 % given two frames acquired from the two cameras, and extra data extracted
 % from previous frames such as estimated stickLoc, this function runs all necessary 
 % processes such as pre-processing, stick location finding and depth extraction.
@@ -12,11 +12,23 @@ function [stickLoc] = ADLocationPerTimestep(frames, params)
 % calibration object is stored in params.calib
 
 % pre-process, extract features
+if ~exist('displayAnaglyph','var')
+    displayAnaglyph = false;
+end
+
 pp_frames = cellfun(@(x) ADPreProcessing(x, params), frames, 'UniformOutput', false);
 [rect_frames{2}, rect_frames{1}] = rectifyStereoImages(pp_frames{2}, pp_frames{1}, params.stereoParams);
 
-%[rect_frames_tmp{2}, rect_frames_tmp{1}] = rectifyStereoImages(frames{2}, frames{1}, params.stereoParams);
-%imshow(stereoAnaglyph(rect_frames_tmp{1}, rect_frames_tmp{2}));title('Rectified images');
+if displayAnaglyph
+    figure;
+    [rect_frames_tmp{2}, rect_frames_tmp{1}] = rectifyStereoImages(frames{2}, frames{1}, params.stereoParams);
+    imshow(stereoAnaglyph(rect_frames_tmp{1}, rect_frames_tmp{2}));title('Rectified images');
+    key = input('if Anaglyph is not aligned, enter t to terminate\n', 's');
+    if strcmp(key, 't')
+        error('cameras are not calibrated, try to switch cameras or re-calibrate');
+    end
+    close;
+end
 
 [stickLocRight, sticksFoundLeft] = ADFindLocationsXY(rect_frames{1}, params);
 [stickLocLeft, sticksFoundRight]  = ADFindLocationsXY(rect_frames{2}, params);

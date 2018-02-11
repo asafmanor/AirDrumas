@@ -1,4 +1,4 @@
-close all; clc;
+clear; close all; clc;
 global KEY_IS_PRESSED
 KEY_IS_PRESSED = 0;
 global VERB
@@ -13,14 +13,14 @@ addpath('Samples');
 params = ADLoadParams();
 
 % test asaf
-params.numOfSticks = 1;
-params.playerPosition = [177 0];
-params.drums{1}.shift = 65;
-params.drums{2}.shift = 69;
-params.drums{3}.shift = 72.5;
-params.minAngle = 10;
-params.maxAngle = 170;
-params.numOfDrums = 3;
+params.numOfSticks = 2;
+params.playerPosition = [85 0];
+params.drums{1}.shift = 59;
+params.drums{2}.shift = 59;
+params.drums{3}.shift = 61;
+params.minAngle = 35;
+params.maxAngle = 140;
+params.numOfDrums = 4;
 
 params.drumGauges = gauges;
 
@@ -28,10 +28,10 @@ params.drumGauges = gauges;
 
 if strcmp(runMode, 'online')
     if ~exist('camR','var')
-        camR = webcam(3);
+        camR = webcam(2);
     end
     if ~exist('camL', 'var')
-        camL = webcam(2);
+        camL = webcam(3);
     end
     %ADInitializeRecordingSession(camR, camL, params)
     % init state for drum machine
