@@ -3,9 +3,8 @@ global KEY_IS_PRESSED
 KEY_IS_PRESSED = 0;
 global VERB
 VERB = 'low';
-global runMode
-runMode = 'live';
 
+runMode = 'live';
 addpath('Samples');
 params = ADLoadParams();
 
@@ -18,6 +17,11 @@ params.drums{3}.shift = 72.5;
 params.minAngle = 10;
 params.maxAngle = 170;
 params.numOfDrums = 3;
+
+for k = 1:params.numOfDrums
+    params.drums{k}.shiftGauge = uigauge('ninetydegrees');
+    params.drums{k}.shiftGauge.Limits = [-10 10];
+end
 % test - asaf
 
 if strcmp(runMode, 'live')
@@ -40,10 +44,9 @@ if strcmp(runMode, 'live')
     historyR = []; historyL = [];
 	while ~KEY_IS_PRESSED
 	    drawnow
+        frames{1} = snapshot(camR);
 	    frames{2} = snapshot(camL); % #2 is left camera!
-	    frames{1} = snapshot(camR);
 	    stickLoc = ADLocationPerTimestep(frames, params);
-	    %[drumSound, drumState] = ADDecision(stickLoc, params, drumState);
 	    [drumSound, lastLoc] = ADDecision3(stickLoc, params, lastLoc);
 	    ADSound2(drumSound, params);
     end
