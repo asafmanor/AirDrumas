@@ -25,7 +25,7 @@ elseif size(props,1) == 1
     largestCC = 1;
     redStickFound = true;
 else
-    warning('Red stick was not found in the picture');
+    %warning('Red stick was not found in the picture');
 end
 if redStickFound
     centers = cat(1, props.Centroid);
@@ -47,7 +47,7 @@ if N == 2
     	largestCC = 1;
     	blueStickFound = true;
 	else
-    	warning('Blue stick was not found in the picture');
+    	%warning('Blue stick was not found in the picture');
     end
     if blueStickFound
         centers = cat(1, props.Centroid);
