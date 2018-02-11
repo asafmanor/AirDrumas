@@ -2,29 +2,24 @@ clear ; close all; clc;
 global KEY_IS_PRESSED
 KEY_IS_PRESSED = 0;
 
-global calib
-calib.enable = true;
-
 addpath('Samples');
 params = ADLoadParams();
 runMode = 'live';
 
 % test asaf
-load paramsAsaf.mat
 params.numOfSticks = 2;
 params.playerPosition = [210 0];
-params.drums{1}.shift = 66;
-params.drums{2}.shift = 70;
-params.drums{3}.shift = 73;
-params.drums{4}.shift = 74;
-params.minAngle = 5;
+params.drums{1}.shift = 65;
+params.drums{2}.shift = 69;
+params.drums{3}.shift = 72.5;
+params.minAngle = 10;
 params.maxAngle = 170;
 params.numOfDrums = 3;
 % test - asaf
 
 if strcmp(runMode, 'live')
-	camR = webcam(2);
-	camL = webcam(3);
+	camR = webcam(3);
+	camL = webcam(2);
     %ADInitializeRecordingSession(camR, camL, params)
 
 	% init state for drum machine
@@ -46,6 +41,7 @@ if strcmp(runMode, 'live')
 	    [drumSound, lastLoc] = ADDecision3(stickLoc, params, lastLoc);
 	    ADSound2(drumSound, params);
     end
+    close all;
 elseif strcmp(runMode, 'video')
 % 	load leftArray;
 % 	load rightArray;

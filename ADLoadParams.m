@@ -29,9 +29,9 @@ params.zmargin = 5;
 params.margin = 0;
 
 % for decision type #2
-[params.drums{1}.Sound, params.drums{1}.fs] = audioread('Samples/00.wav'); % snare
-[params.drums{2}.Sound, params.drums{2}.fs] = audioread('Samples/04.wav'); % hi-hat
-[params.drums{3}.Sound, params.drums{3}.fs] = audioread('Samples/05.wav'); % ride
+[params.drums{1}.Sound, params.drums{1}.fs] = audioread('Samples/04.wav'); % hi-hat
+[params.drums{2}.Sound, params.drums{2}.fs] = audioread('Samples/00.wav'); % snare
+[params.drums{3}.Sound, params.drums{3}.fs] = audioread('Samples/Kick006.wav'); % bass-drum
 [params.drums{4}.Sound, params.drums{4}.fs] = audioread('Samples/Kick006.wav'); % bass-drum
 params.drumR = 50; % drum radius
 
