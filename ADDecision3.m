@@ -1,4 +1,6 @@
-function [drumSound, lastLocUpdate, params] = ADDecision3(stickLoc, params, lastLoc, offlineData) 
+function [drumSound, lastLocUpdate, params] = ADDecision3(stickLoc, params, lastLoc) 
+
+global offlineData
 
 N = params.numOfSticks;
 drums = params.drums;
@@ -31,22 +33,21 @@ for n = 1:N
             params.lockOfStick{n} = 1;
           end
         end
-        if stickLoc{n}.found >= lastLoc{n}.found + params.marginOpenLock 
+        if stickLoc{n}.shift >= lastLoc{n}.shift + params.marginOpenLock 
             params.lockOfStick{n} = 0;
         end
       end
         if params.offline.flag
-           offlineData{n}.serialNum = offlineData{n}.serialNum + 1;
-           num = offlineData{n}.serialNum;
+           num = params.offline.frameNum;
            % offlineStruct is: ('num',{},'x',{},'y',{},'shift',{},'angle',{},'radius',{},'sound',{})
-           offlineData{num}(1).frameNum = count;
-           offlineData{num}(1).found = stickLoc{n}.found;
-           offlineData{num}(1).x = stickLoc{n}.x;
-           offlineData{num}(1).y = stickLoc{n}.y;
-           offlineData{num}(1).shift = stickLoc{n}.shift;
-           offlineData{num}(1).angle = Angle;
-           offlineData{num}(1).radius = Radius;
-           offlineData{num}(1).sound = drumSound(n);
+           offlineData{n}(num).frameNum = count;
+           offlineData{n}(num).found = stickLoc{n}.found;
+           offlineData{n}(num).x = stickLoc{n}.x;
+           offlineData{n}(num).y = stickLoc{n}.y;
+           offlineData{n}(num).shift = stickLoc{n}.shift;
+           offlineData{n}(num).angle = Angle;
+           offlineData{n}(num).radius = Radius;
+           offlineData{n}(num).sound = drumSound(n);
         end
       lastLoc{n} = stickLoc{n};
     end

@@ -44,7 +44,7 @@ if strcmp(runMode, 'live')
 	    frames{1} = snapshot(camR);
 	    stickLoc = ADLocationPerTimestep(frames, params);
 	    %[drumSound, drumState] = ADDecision(stickLoc, params, drumState);
-	    [drumSound, lastLoc, params] = ADDecision3(stickLoc, params, lastLoc, offlineData);
+	    [drumSound, lastLoc, params] = ADDecision3(stickLoc, params, lastLoc);
 	    ADSound2(drumSound, params);
     end
     close all;

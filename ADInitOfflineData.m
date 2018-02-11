@@ -1,10 +1,7 @@
 function [offlineData] = ADInitOfflineData(offlineData)
-% function description
-% INPUTS: 	parameter1 -
-%			parameter2 - 
-% OUTPUTS: 	result - 
+% function for initialization of the offlineData struct
 
-offlineStruct = struct('serialNum',0,'frameNum',{},'found',{},'x',{},'y',{},'shift',{},'angle',{},'radius',{},'sound',{});
+offlineStruct = struct('frameNum',{},'found',{},'x',{},'y',{},'shift',{},'angle',{},'radius',{},'sound',{},'frame',{});
 offlineData{1} = offlineStruct;
 offlineData{2} = offlineStruct;
 end
