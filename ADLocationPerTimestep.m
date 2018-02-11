@@ -15,6 +15,9 @@ function [stickLoc] = ADLocationPerTimestep(frames, params)
 pp_frames = cellfun(@(x) ADPreProcessing(x, params), frames, 'UniformOutput', false);
 [rect_frames{2}, rect_frames{1}] = rectifyStereoImages(pp_frames{2}, pp_frames{1}, params.stereoParams);
 
+%[rect_frames_tmp{2}, rect_frames_tmp{1}] = rectifyStereoImages(frames{2}, frames{1}, params.stereoParams);
+%imshow(stereoAnaglyph(rect_frames_tmp{1}, rect_frames_tmp{2}));title('Rectified images');
+
 [stickLocRight, sticksFoundLeft] = ADFindLocationsXY(rect_frames{1}, params);
 [stickLocLeft, sticksFoundRight]  = ADFindLocationsXY(rect_frames{2}, params);
 sticksFound = sticksFoundLeft .* sticksFoundRight; % a vector of two boolean elements

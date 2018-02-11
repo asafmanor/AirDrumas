@@ -1,4 +1,4 @@
-clear; close all; clc;
+close all; clc;
 global KEY_IS_PRESSED
 KEY_IS_PRESSED = 0;
 global VERB
@@ -13,8 +13,8 @@ addpath('Samples');
 params = ADLoadParams();
 
 % test asaf
-params.numOfSticks = 2;
-params.playerPosition = [210 0];
+params.numOfSticks = 1;
+params.playerPosition = [177 0];
 params.drums{1}.shift = 65;
 params.drums{2}.shift = 69;
 params.drums{3}.shift = 72.5;
@@ -66,7 +66,6 @@ if strcmp(runMode, 'online')
     end
     record.totalTime = toc;
     record.totalFrames = t;
-    close all;
     if record.recordStickLoc || record.recordFrames
         clk = string(clock);
         str = sprintf('rec_%s_%s', clk(4), clk(5));

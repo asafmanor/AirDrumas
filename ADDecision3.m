@@ -10,7 +10,7 @@ totAngle = maxAngle - minAngle;
 numOfDrums = params.numOfDrums;
 
 stickColor = {'Red', 'Blue'};
-
+clc
 for n = 1:N
     if stickLoc{n}.found && lastLoc{n}.found
         locInPlayerCoordinates = [stickLoc{n}.x - player(1),  stickLoc{n}.y - player(2)];
