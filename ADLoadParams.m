@@ -37,9 +37,9 @@ for n = 1:params.numOfDrums
 [params.drums{1}.Sound, params.drums{1}.fs] = audioread('Samples/04.wav'); % hi-hat
 [params.drums{2}.Sound, params.drums{2}.fs] = audioread('Samples/00.wav'); % snare
 [params.drums{3}.Sound, params.drums{3}.fs] = audioread('Samples/Kick006.wav'); % bass-drum
-params.drums{1}.name = 'HI-HAT   ';
-params.drums{2}.name = 'SNARE    ';
-params.drums{3}.name = 'BASS-DRUM';
+params.drums{1}.name = 'hihat';
+params.drums{2}.name = 'snare';
+params.drums{3}.name = 'floor';
 
 params.maxAngle = 90;
 params.minAngle = -90;
