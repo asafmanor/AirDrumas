@@ -1,9 +1,13 @@
 clear ; close all; clc;
 global KEY_IS_PRESSED
+global offlineData
+
 KEY_IS_PRESSED = 0;
+offlineData = {};
 
 addpath('Samples');
 params = ADLoadParams();
+offlineData = ADInitOfflineData(offlineData);
 runMode = 'live';
 
 % test asaf
@@ -15,6 +19,8 @@ params.drums{3}.shift = 72.5;
 params.minAngle = 10;
 params.maxAngle = 170;
 params.numOfDrums = 3;
+params.lockOfStick{1} = 0;
+params.lockOfStick{2} = 0;
 % test - asaf
 
 if strcmp(runMode, 'live')
@@ -38,7 +44,7 @@ if strcmp(runMode, 'live')
 	    frames{1} = snapshot(camR);
 	    stickLoc = ADLocationPerTimestep(frames, params);
 	    %[drumSound, drumState] = ADDecision(stickLoc, params, drumState);
-	    [drumSound, lastLoc] = ADDecision3(stickLoc, params, lastLoc);
+	    [drumSound, lastLoc, params] = ADDecision3(stickLoc, params, lastLoc, offlineData);
 	    ADSound2(drumSound, params);
     end
     close all;

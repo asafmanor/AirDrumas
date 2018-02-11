@@ -34,6 +34,8 @@ params.margin = 0;
 [params.drums{3}.Sound, params.drums{3}.fs] = audioread('Samples/Kick006.wav'); % bass-drum
 [params.drums{4}.Sound, params.drums{4}.fs] = audioread('Samples/Kick006.wav'); % bass-drum
 params.drumR = 50; % drum radius
+params.marginOpenLock = 0.8; % margin for openning the lock while rising the stick 
+params.marginHit = 1.2; % margin for global threshold for lowering the stick
 
 % for decision type #3
 params.maxAngle = 90;
@@ -47,6 +49,9 @@ for n =1:6
     params.drums{n}.shift = 0;
 end
 
+% for offline recording
+params.offline.flag = 1;
+params.offline.frameNum = 0;
 % stereo vision params
 try
     temp = load('stereoParams.mat');
