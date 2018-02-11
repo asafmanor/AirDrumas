@@ -1,10 +1,13 @@
-clear ; close all; clc;
+close all; clc;
 global KEY_IS_PRESSED
 KEY_IS_PRESSED = 0;
+global VERB
+VERB = 'low';
+global runMode
+runMode = 'live';
 
 addpath('Samples');
 params = ADLoadParams();
-runMode = 'live';
 
 % test asaf
 params.numOfSticks = 2;
@@ -18,10 +21,13 @@ params.numOfDrums = 3;
 % test - asaf
 
 if strcmp(runMode, 'live')
-	camR = webcam(3);
-	camL = webcam(2);
+    if ~exist(var, camR)
+        camR = webcam(3);
+    end
+    if ~exist(var, camL)
+        camL = webcam(2);
+    end
     %ADInitializeRecordingSession(camR, camL, params)
-
 	% init state for drum machine
     frames{1} = snapshot(camR);
 	frames{2} = snapshot(camL); % #2 is left camera!
