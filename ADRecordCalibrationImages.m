@@ -1,8 +1,5 @@
 function ADRecordCalibrationImages(camL, camR, numOfimages)
-% function description
 
-global debug;
-% function body
 root = pwd;
 formatOut = 'ddmmyy_HHMMSS';
 dateString = datestr(now,formatOut);
@@ -27,12 +24,6 @@ for counter = [1:numOfimages]
 
 end
 disp(['Recording session ended files may be found at folder ', folder]);
-
-% debug dump
-if debug.enable
-	t = debug.timestep;
-	% debug.some_parameter = some_parameter;
-end
 
 end
 

@@ -1,47 +1,47 @@
 clear ; close all; clc;
-global debug;
-debug.enable = false;
+global KEY_IS_PRESSED
+KEY_IS_PRESSED = 0;
 
-params = ADLoadParams();
 addpath('Samples');
+params = ADLoadParams();
 runMode = 'live';
-params = quickDrumLocations(params);
+
+% test asaf
+params.numOfSticks = 2;
+params.playerPosition = [210 0];
+params.drums{1}.shift = 65;
+params.drums{2}.shift = 69;
+params.drums{3}.shift = 72.5;
+params.minAngle = 10;
+params.maxAngle = 170;
+params.numOfDrums = 3;
+% test - asaf
 
 if strcmp(runMode, 'live')
-	camL = webcam(3);
-	camR = webcam(2);
-	input('Press any key when ready to init ');
+	camR = webcam(3);
+	camL = webcam(2);
     %ADInitializeRecordingSession(camR, camL, params)
 
-	% init state for drum machine 
+	% init state for drum machine
+    frames{1} = snapshot(camR);
 	frames{2} = snapshot(camL); % #2 is left camera!
-	frames{1} = snapshot(camR);
-	drumState = ADInitstate(frames, params);
-	%% run!	
+	lastLoc = ADInitState2(frames, params);
 
-	global KEY_IS_PRESSED
-	KEY_IS_PRESSED = 0;
 	gcf
 	set(gcf, 'KeyPressFcn', @myKeyPressFcn)
-    preview(camL);
     preview(camR);
+    input('Ready when you are! Press any key to start playing ');
+    historyR = []; historyL = [];
 	while ~KEY_IS_PRESSED
-%         tic
 	    drawnow
 	    frames{2} = snapshot(camL); % #2 is left camera!
 	    frames{1} = snapshot(camR);
 	    stickLoc = ADLocationPerTimestep(frames, params);
-        if stickLoc{1}.found
-            fprintf('stick #1: x = %.1f, y = %.1f, shift = %3.3f\n', stickLoc{1}.x, stickLoc{1}.y, stickLoc{1}.shift);
-        end
-        if stickLoc{2}.found
-            fprintf('stick #2: x = %.1f, y = %.1f, shift = %3.3f\n', stickLoc{2}.x, stickLoc{2}.y, stickLoc{2}.shift);
-        end
-	    [drumSound, drumState] = ADDecision(stickLoc, params, drumState);
-	    ADSound(drumSound, params.kit);
+	    %[drumSound, drumState] = ADDecision(stickLoc, params, drumState);
+	    [drumSound, lastLoc] = ADDecision3(stickLoc, params, lastLoc);
+	    ADSound2(drumSound, params);
     end
-    close;
-	disp('Run Finished! Hope you had a jolly good time')
+    close all;
 elseif strcmp(runMode, 'video')
 % 	load leftArray;
 % 	load rightArray;

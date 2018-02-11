@@ -1,6 +1,4 @@
 clear ; close all;
-global debug;
-debug.enable = false;
 
 camL = 1;
 camR = 2;

@@ -16,8 +16,6 @@ redStickFound  = false;
 
 % first, look for the red stick:
 props = regionprops(A > params.xy.redMaskTh, reqProps);
-% test - asaf
-%figure(1); imshow(A > params.xy.redMaskTh);
 
 if size(props,1) > 1 % more then N connected components
     [~, largestCC] = sort([props.Area], 'descend'); % get biggest elements indices
