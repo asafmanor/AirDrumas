@@ -1,8 +1,9 @@
 clear ; close all;
 
-camL = 1;
-camR = 2;
-numOfimages = 15;
+camR = webcam(2);
+camL = webcam(3);
+preview(camL);preview(camR); 
+numOfimages = 20;
 
 ADRecordCalibrationImages(camL, camR, numOfimages)
 
