@@ -1,3 +1,4 @@
-leftArray.mat
-rightArray.mat
+calibPictures/
 data_capture_2.mat
+*.asv
+rec*
