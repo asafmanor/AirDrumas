@@ -23,10 +23,10 @@ for n = 1:N
                 if (stickLoc{n}.shift <= drums{k}.shift && lastLoc{n}.shift > drums{k}.shift)
                     drumSound(n) = k;
                 end
-                %vprintf('low', '%s stick: %3.3f above %s\n',...
-                    %stickColor{n}, stickLoc{n}.shift-drums{k}.shift, upper(drums{k}.name));
                 % update gauge
-                updateValue(params.drumGauges, drums{k}.name, stickLoc{n}.shift-drums{k}.shift);
+                if isfield(params, 'drumGauges')
+                    updateValue(params.drumGauges, drums{k}.name, stickLoc{n}.shift-drums{k}.shift);
+                end
             end
         end % end of for loop
     end % end of found 'if'

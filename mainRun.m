@@ -1,37 +1,37 @@
-clear; close all; clc;
+close all; clc;
 global KEY_IS_PRESSED
 KEY_IS_PRESSED = 0;
 global VERB
 VERB = 'low';
 
 % record variables
-record.recordStickLoc = false;
+record.recordStickLoc = true;
 record.recordFrames   = false;
 
-runMode = 'online';
+runMode = 'offline';
 addpath('Samples');
-params = ADLoadParams();
 
-% test asaf
-params.numOfSticks = 2;
-params.playerPosition = [85 0];
-params.drums{1}.shift = 59;
-params.drums{2}.shift = 59;
-params.drums{3}.shift = 61;
-params.minAngle = 35;
-params.maxAngle = 140;
-params.numOfDrums = 4;
-
-params.drumGauges = gauges;
-
-% test - asaf
+if strcmp(runMode, 'online')
+    params = ADLoadParams();
+    % test asaf
+    params.numOfSticks = 2;
+    params.playerPosition = [110 0];
+    params.drums{1}.shift = 59;
+    params.drums{2}.shift = 59;
+    params.drums{3}.shift = 61;
+    params.minAngle = 25;
+    params.maxAngle = 160;
+    params.numOfDrums = 3;
+    %params.drumGauges = gauges;
+    % test - asaf
+end
 
 if strcmp(runMode, 'online')
     if ~exist('camR','var')
-        camR = webcam(2);
+        camR = webcam(3);
     end
     if ~exist('camL', 'var')
-        camL = webcam(3);
+        camL = webcam(2);
     end
     %ADInitializeRecordingSession(camR, camL, params)
     % init state for drum machine
@@ -72,18 +72,27 @@ if strcmp(runMode, 'online')
         save(str, 'record', 'params');
     end
 elseif strcmp(runMode, 'offline')
-    load(fileToLoad)
+    if ~exist('params', 'var')
+        load('rec_0_10.mat')
+    end
+    params.drumGauges = gauges;
+    % unpack record struct
+    recordStickLoc = record.stickLoc;
+    totalTime = record.totalTime;
+    totalFrames = record.totalFrames;
+    recordFrames = record.frames;
+    
     lastLoc = recordStickLoc{1};
     rate = totalTime / totalFrames;
-    figure;
+    
     for t = 2:totalFrames
-        if exist('recordFrame', 'var')
+        if exist('recordFrames', 'var')
             imshow(recordFrames{t}{1}); % show right camera
         end
         stickLoc = recordStickLoc{t};
         [drumSound, lastLoc] = ADDecision3(stickLoc, params, lastLoc);
         ADSound2(drumSound, params);
-        pause(rate);
+        %pause(rate);
     end
 end
 

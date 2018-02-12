@@ -19,7 +19,7 @@ params.pp.resize.resizeFactor = 1/4;
 
 % xy location params
 params.xy.redMaskTh = 55;
-params.xy.blueMaskTh = -20;
+params.xy.blueMaskTh = -25;
 
 % drum kit params
 % for decision type #1,2 (not used)
