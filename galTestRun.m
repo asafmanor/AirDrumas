@@ -21,6 +21,9 @@ clear all; close all;
 % y = (sin(2*t).^2).*cos(t);
 % comet3(x,y,t,0.01);
 load('C:\Users\glifshitz\Documents\GitHub\AirDrums\Offline\offlineData.mat')
-load('C:\Users\glifshitz\Documents\GitHub\AirDrums\Offline\record1.mat')
-load('C:\Users\glifshitz\Documents\GitHub\AirDrums\Offline\record2.mat')
+clear offlineData;
+%load('C:\Users\glifshitz\Documents\GitHub\AirDrums\Offline\record1.mat')
+ load('C:\Users\glifshitz\Documents\GitHub\AirDrums\Offline\record2.mat')
+
+ADOfflineModeDisplay(offlineData,params);
 

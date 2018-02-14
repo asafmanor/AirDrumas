@@ -16,25 +16,13 @@ clear all; close all;
 % ADPlotDrums(fig,params);
 
 %%
-% Create random signals
-time = 1:100;
-signal_1 = rand(100,1);
-signal_2 = rand(100,1);
-% For plotting correlation line..need all values first
-corr_line = animatedline;
-for start_point = 0:80
-    sig1_cut = signal_1(start_point+1:start_point+1+19);
-    sig2_cut = signal_2(start_point+1:start_point+1+19);
-    corr_pre = corrcoef(sig1_cut,sig2_cut);
-    corr_fin(start_point+1) = corr_pre(2,1);
-end
-x_plot = 0:80;
-n = 1;
-subplot(3,1,1)
-axis([-0.1 80 -1 1])    
-for start_point = 0:80  
-    addpoints(corr_line,x_plot(n),corr_fin(n))
-    drawnow
-    n = n+1;
-    pause(0.01)   
-end
+% t = -10*pi:pi/250:10*pi;
+% x = (cos(2*t).^2).*sin(t);
+% y = (sin(2*t).^2).*cos(t);
+% comet3(x,y,t,0.01);
+load('C:\Users\glifshitz\Documents\GitHub\AirDrums\Offline\offlineData.mat')
+% load('C:\Users\glifshitz\Documents\GitHub\AirDrums\Offline\record1.mat')
+% load('C:\Users\glifshitz\Documents\GitHub\AirDrums\Offline\record2.mat')
+
+ADOfflineModeDisplay(r
+
