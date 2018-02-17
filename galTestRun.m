@@ -25,5 +25,5 @@ clear offlineData;
 %load('C:\Users\glifshitz\Documents\GitHub\AirDrums\Offline\record1.mat')
  load('C:\Users\glifshitz\Documents\GitHub\AirDrums\Offline\record2.mat')
 
-ADOfflineModeDisplay(offlineData,params);
+ADOfflineMode(offlineData,params);
 

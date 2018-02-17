@@ -1,0 +1,29 @@
+function ADOfflineMode(offlineData,params)
+%This function is the main function for analayzing recorded data offline.
+%inputs -   offlineData is a 2X1 cell of structs containing all recorded
+%           data.
+%           params is the paramas struct used when offlineData was recorded.
+
+%% load params for show
+numS = length(offlineData);
+numD = params.numOfDrums;
+drumR = params.drumR;
+for s = 1:numS %stick loop
+    for posInd = 1:length(offlineData{s}) %pos loop
+        if offlineData{s}(posInd).found
+            stickPos(posInd,:,s) = [offlineData{s}(posInd).x offlineData{s}(posInd).y offlineData{s}(posInd).shift];
+        else
+            stickPos(posInd,:,s) = nan(1,3);
+        end
+        frames{posInd} = offlineData{1}(posInd).frame;
+%         frames{posInd} = imrotate(offlineData{1}(posInd).frame,180);
+%         for dim = 1:3
+%             frames{posInd}(:,:,dim) = flip(frames{posInd}(:,:,dim),2);
+%         end
+    end %end pos loop
+end %end stick loop
+
+ADOfflineDisplay(stickPos,frames,params,'stem',24);
+
+end
+
