@@ -7,8 +7,8 @@ folder = ['calibImages_',dateString];
 cd ./CalibData
 mkdir(folder)
 cd ..
-pathL = [root,'CalibData/',folder,'Left'];
-pathR = [root,'CalibData/',folder,'Right'];
+pathL = [root,'CalibData/',folder,'/Left'];
+pathR = [root,'CalibData/',folder,'/Right'];
 disp(['Recording session ended files may be found at folder: ', folder]);
 
 disp('Start recording calibration images')
