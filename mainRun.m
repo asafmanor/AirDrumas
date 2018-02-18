@@ -6,10 +6,10 @@ KEY_IS_PRESSED = 0;
 record.recordStickLoc = false;
 record.recordFrames   = false;
 
-runMode = 'online';
+runMode = 'Live';
 addpath('Samples');
 
-if strcmp(runMode, 'online')
+if strcmp(runMode, 'Live')
     params = ADLoadParams();
     % test asaf
     params.numOfSticks = 2;
@@ -20,11 +20,11 @@ if strcmp(runMode, 'online')
     params.minAngle = 25;
     params.maxAngle = 160;
     params.numOfDrums = 3;
-    %params.drumGauges = gauges;
+    params.drumGauges = gauges;
     % test - asaf
 end
 
-if strcmp(runMode, 'online')
+if strcmp(runMode, 'Live')
     if ~exist('camR','var')
         camR = webcam(3);
     end
@@ -44,7 +44,6 @@ if strcmp(runMode, 'online')
     set(gcf, 'KeyPressFcn', @myKeyPressFcn)
     preview(camR);
     input('Ready when you are! Press any key to start playing ');
-    historyR = []; historyL = [];
     t = 1;
     tic
     while ~KEY_IS_PRESSED
@@ -69,7 +68,7 @@ if strcmp(runMode, 'online')
         str = sprintf('rec_%s_%s', clk(4), clk(5));
         save(str, 'record', 'params');
     end
-elseif strcmp(runMode, 'offline')
+elseif strcmp(runMode, 'Test')
     if ~exist('params', 'var')
         load('rec_0_10.mat')
     end
