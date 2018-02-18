@@ -1,79 +1,97 @@
-clear ; close all; clc;
+close all; clc;
 global KEY_IS_PRESSED
 KEY_IS_PRESSED = 0;
 
+% record variables
+record.recordStickLoc = false;
+record.recordFrames   = false;
+
+runMode = 'online';
 addpath('Samples');
-params = ADLoadParams();
-runMode = 'live';
 
-% test asaf
-params.numOfSticks = 2;
-params.playerPosition = [210 0];
-params.drums{1}.shift = 65;
-params.drums{2}.shift = 69;
-params.drums{3}.shift = 72.5;
-params.minAngle = 10;
-params.maxAngle = 170;
-params.numOfDrums = 3;
-% test - asaf
+if strcmp(runMode, 'online')
+    params = ADLoadParams();
+    % test asaf
+    params.numOfSticks = 2;
+    params.playerPosition = [110 0];
+    params.drums{1}.shift = 59;
+    params.drums{2}.shift = 59;
+    params.drums{3}.shift = 61;
+    params.minAngle = 25;
+    params.maxAngle = 160;
+    params.numOfDrums = 3;
+    %params.drumGauges = gauges;
+    % test - asaf
+end
 
-if strcmp(runMode, 'live')
-	camR = webcam(3);
-	camL = webcam(2);
+if strcmp(runMode, 'online')
+    if ~exist('camR','var')
+        camR = webcam(3);
+    end
+    if ~exist('camL', 'var')
+        camL = webcam(2);
+    end
     %ADInitializeRecordingSession(camR, camL, params)
-
-	% init state for drum machine
+    % init state for drum machine
     frames{1} = snapshot(camR);
-	frames{2} = snapshot(camL); % #2 is left camera!
-	lastLoc = ADInitState2(frames, params);
-
-	gcf
-	set(gcf, 'KeyPressFcn', @myKeyPressFcn)
+    frames{2} = snapshot(camL); % #2 is left camera!
+    lastLoc = ADInitState2(frames, params);
+    if record.recordStickLoc
+        record.stickLoc{1} = lastLoc;
+    end
+    
+    gcf
+    set(gcf, 'KeyPressFcn', @myKeyPressFcn)
     preview(camR);
     input('Ready when you are! Press any key to start playing ');
     historyR = []; historyL = [];
-	while ~KEY_IS_PRESSED
-	    drawnow
-	    frames{2} = snapshot(camL); % #2 is left camera!
-	    frames{1} = snapshot(camR);
-	    stickLoc = ADLocationPerTimestep(frames, params);
-	    %[drumSound, drumState] = ADDecision(stickLoc, params, drumState);
-	    [drumSound, lastLoc] = ADDecision3(stickLoc, params, lastLoc);
-	    ADSound2(drumSound, params);
+    t = 1;
+    tic
+    while ~KEY_IS_PRESSED
+        t = t+1;
+        drawnow
+        frames{1} = snapshot(camR);
+        frames{2} = snapshot(camL); % #2 is left camera!
+        stickLoc = ADLocationPerTimestep(frames, params);
+        if record.recordStickLoc
+            record.stickLoc{t} = stickLoc;
+        end
+        if record.recordFrames
+            record.frames{t} = frames;
+        end
+        [drumSound, lastLoc] = ADDecision3(stickLoc, params, lastLoc);
+        ADSound2(drumSound, params);
     end
-    close all;
-elseif strcmp(runMode, 'video')
-% 	load leftArray;
-% 	load rightArray;
-%     %ADInitializeRecordingSession(camR, camL, params)
-
-% 	% init state for drum machine 
-% 	frames{2} = leftArray(:,:,:,1); % #2 is left camera!
-% 	frames{1} = rightArray(:,:,:,1);
-% 	drumState = ADInitstate(frames, params);
-% 	%% run!	
-
-% 	global KEY_IS_PRESSED
-% 	KEY_IS_PRESSED = 0;
-% 	gcf
-% 	set(gcf, 'KeyPressFcn', @myKeyPressFcn)
-% 	while ~KEY_IS_PRESSED
-% %         tic
-% 	    drawnow
-% 	    frames{2} = snapshot(camL); % #2 is left camera!
-% 	    frames{1} = snapshot(camR);
-% 	    stickLoc = ADLocationPerTimestep(frames, params);
-%         if stickLoc{1}.found
-%             fprintf('stick #1: x = %.1f, y = %.1f, shift = %3.3f\n', stickLoc{1}.x, stickLoc{1}.y, stickLoc{1}.shift);
-%         end
-%         if stickLoc{2}.found
-%             fprintf('stick #2: x = %.1f, y = %.1f, shift = %3.3f\n', stickLoc{2}.x, stickLoc{2}.y, stickLoc{2}.shift);
-%         end
-% 	    [drumSound, drumState] = ADDecision(stickLoc, params, drumState);
-% 	    ADSound(drumSound, params.kit);
-%     end
-%     close;
-% 	disp('Run Finished! Hope you had a jolly good time')
+    record.totalTime = toc;
+    record.totalFrames = t;
+    if record.recordStickLoc || record.recordFrames
+        clk = string(clock);
+        str = sprintf('rec_%s_%s', clk(4), clk(5));
+        save(str, 'record', 'params');
+    end
+elseif strcmp(runMode, 'offline')
+    if ~exist('params', 'var')
+        load('rec_0_10.mat')
+    end
+    params.drumGauges = gauges;
+    % unpack record struct
+    recordStickLoc = record.stickLoc;
+    totalTime = record.totalTime;
+    totalFrames = record.totalFrames;
+    recordFrames = record.frames;
+    
+    lastLoc = recordStickLoc{1};
+    rate = totalTime / totalFrames;
+    
+    for t = 2:totalFrames
+        if exist('recordFrames', 'var')
+            imshow(recordFrames{t}{1}); % show right camera
+        end
+        stickLoc = recordStickLoc{t};
+        [drumSound, lastLoc] = ADDecision3(stickLoc, params, lastLoc);
+        ADSound2(drumSound, params);
+        %pause(rate);
+    end
 end
 
 function myKeyPressFcn(hObject, event)

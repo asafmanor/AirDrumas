@@ -1,4 +1,4 @@
-function [drumSound, lastLocUpdate] = ADDecision3(stickLoc, params, lastLoc) 
+function [drumSound, lastLocUpdate] = ADDecision3(stickLoc, params, lastLoc)
 
 N = params.numOfSticks;
 drums = params.drums;
@@ -9,20 +9,27 @@ maxAngle = params.maxAngle;
 totAngle = maxAngle - minAngle;
 numOfDrums = params.numOfDrums;
 
+stickColor = {'Red', 'Blue'};
 clc
 for n = 1:N
-  if stickLoc{n}.found && lastLoc{n}.found
-    locInPlayerCoordinates = [stickLoc{n}.x - player(1),  stickLoc{n}.y - player(2)];
-    Angle = findAngle(locInPlayerCoordinates, [1 0]); % angle of stick location with reference to X axis
-    fprintf('stick #%d: x=%3.3f, y=%3.3f, shift=%3.3f , Angle = %3.3f\n\n',...
-      n, stickLoc{n}.x, stickLoc{n}.y, stickLoc{n}.shift, Angle);
-    for k = 1 : numOfDrums
-      if (stickLoc{n}.shift <= drums{k}.shift && lastLoc{n}.shift > drums{k}.shift &&...
-        Angle >= (minAngle + (k-1)*totAngle/numOfDrums) && Angle < (minAngle + (k)*totAngle/numOfDrums))
-        drumSound(n) = k;
-      end
-    end
-  end
-  lastLoc{n} = stickLoc{n};
+    if stickLoc{n}.found && lastLoc{n}.found
+        locInPlayerCoordinates = [stickLoc{n}.x - player(1),  stickLoc{n}.y - player(2)];
+        Angle = findAngle(locInPlayerCoordinates, [1 0]); % angle of stick location with reference to X axis
+        fprintf('%s stick: x=%3.3f, y=%3.3f, shift=%3.3f , Angle = %3.3f\n',...
+            stickColor{n}, stickLoc{n}.x, stickLoc{n}.y, stickLoc{n}.shift, Angle);
+        for k = 1 : numOfDrums
+            % find correct region
+            if (Angle >= (minAngle + (k-1)*totAngle/numOfDrums) && Angle < (minAngle + (k)*totAngle/numOfDrums))
+                if (stickLoc{n}.shift <= drums{k}.shift && lastLoc{n}.shift > drums{k}.shift)
+                    drumSound(n) = k;
+                end
+                % update gauge
+                if isfield(params, 'drumGauges')
+                    updateValue(params.drumGauges, drums{k}.name, stickLoc{n}.shift-drums{k}.shift);
+                end
+            end
+        end % end of for loop
+    end % end of found 'if'
+    lastLoc{n} = stickLoc{n};
 end
 lastLocUpdate = lastLoc;
