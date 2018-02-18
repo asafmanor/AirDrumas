@@ -5,7 +5,7 @@ function [params] = ADLoadParams()
 % OUTPUTS:  params: parameters struct
 
 params.numOfSticks = 1;
-params.numOfDrums = 4;
+params.numOfDrums = 3;
 params.kit = 0;
 params.origFrameSize = [1280 720];
 
@@ -19,31 +19,32 @@ params.pp.resize.resizeFactor = 1/4;
 
 % xy location params
 params.xy.redMaskTh = 55;
-params.xy.blueMaskTh = -20;
+params.xy.blueMaskTh = -25;
 
 % drum kit params
-% for decision type #1
+% for decision type #1,2 (not used)
 params.xmargin = 20;
 params.ymargin = 20;
 params.zmargin = 5;
 params.margin = 0;
+params.drumR = 50;
+for n = 1:params.numOfDrums
+    params.drums{n}.x = 0;
+    params.drums{n}.y = 0;
+ end
 
-% for decision type #2
+% for decision type #2,3 (sound, fs, name, shift)
 [params.drums{1}.Sound, params.drums{1}.fs] = audioread('Samples/04.wav'); % hi-hat
 [params.drums{2}.Sound, params.drums{2}.fs] = audioread('Samples/00.wav'); % snare
 [params.drums{3}.Sound, params.drums{3}.fs] = audioread('Samples/Kick006.wav'); % bass-drum
-[params.drums{4}.Sound, params.drums{4}.fs] = audioread('Samples/Kick006.wav'); % bass-drum
-params.drumR = 50; % drum radius
+params.drums{1}.name = 'hihat';
+params.drums{2}.name = 'snare';
+params.drums{3}.name = 'floor';
 
-% for decision type #3
 params.maxAngle = 90;
 params.minAngle = -90;
 params.playerPosition = [0 0];
-% decision type number 3 also uses shift
-
-for n =1:6
-    params.drums{n}.x = 0;
-    params.drums{n}.y = 0;
+for n = 1:params.numOfDrums
     params.drums{n}.shift = 0;
 end
 
