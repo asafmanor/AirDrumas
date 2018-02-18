@@ -31,19 +31,19 @@ for stickInd = 1:params.numOfSticks
     end
 end
 
-% %% Plot trails
-% for alphaInd = 1:length(alphaValues)
-%     for stickInd = 1:params.numOfSticks
-%         scatter3(trails{stickInd}(alphaInd,1),trails{stickInd}(alphaInd,2),trails{stickInd}(alphaInd,3),...
-%             'MarkerFaceColor','r','MarkerEdgeColor','r','MarkerFaceAlpha'...
-%             ,alphaValues(alphaInd),'MarkerEdgeAlpha',alphaValues(alphaInd));
-%         hold all;
-%         grid on;
-%         axis([imBounds 0 10])
-%     end
-%     %     scatter3(trailB(alphaInd,1),trailB(alphaInd,2),trailB(alphaInd,3),'MarkerFaceColor','b','MarkerEdgeColor','b',...
-%     %         'MarkerFaceAlpha',alphaValues(alphaInd),'MarkerEdgeAlpha',alphaValues(alphaInd));
-% end
-% hold off;
+%% Plot trails
+for alphaInd = 1:length(alphaValues)
+    for stickInd = 1:params.numOfSticks
+        scatter3(trails{stickInd}(alphaInd,1),trails{stickInd}(alphaInd,2),trails{stickInd}(alphaInd,3),...
+            'MarkerFaceColor','r','MarkerEdgeColor','r','MarkerFaceAlpha'...
+            ,alphaValues(alphaInd),'MarkerEdgeAlpha',alphaValues(alphaInd));
+        hold all;
+        grid on;
+        axis([imBounds 0 10])
+    end
+    %     scatter3(trailB(alphaInd,1),trailB(alphaInd,2),trailB(alphaInd,3),'MarkerFaceColor','b','MarkerEdgeColor','b',...
+    %         'MarkerFaceAlpha',alphaValues(alphaInd),'MarkerEdgeAlpha',alphaValues(alphaInd));
+end
+hold off;
 end
 
