@@ -1,14 +1,12 @@
 close all; clc;
 global KEY_IS_PRESSED
 KEY_IS_PRESSED = 0;
-global VERB
-VERB = 'low';
 
 % record variables
-record.recordStickLoc = true;
+record.recordStickLoc = false;
 record.recordFrames   = false;
 
-runMode = 'offline';
+runMode = 'online';
 addpath('Samples');
 
 if strcmp(runMode, 'online')

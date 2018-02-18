@@ -15,7 +15,7 @@ for n = 1:N
     if stickLoc{n}.found && lastLoc{n}.found
         locInPlayerCoordinates = [stickLoc{n}.x - player(1),  stickLoc{n}.y - player(2)];
         Angle = findAngle(locInPlayerCoordinates, [1 0]); % angle of stick location with reference to X axis
-        vprintf('low', '%s stick: x=%3.3f, y=%3.3f, shift=%3.3f , Angle = %3.3f\n',...
+        fprintf('%s stick: x=%3.3f, y=%3.3f, shift=%3.3f , Angle = %3.3f\n',...
             stickColor{n}, stickLoc{n}.x, stickLoc{n}.y, stickLoc{n}.shift, Angle);
         for k = 1 : numOfDrums
             % find correct region
