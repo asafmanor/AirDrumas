@@ -1,17 +1,22 @@
-% clear ; close all;
+clear ; close all;
 
-% camL = webcam(2);
-% camR = webcam(3);
+camL = webcam(2);
+camR = webcam(3);
 numOfimages = 15;
 
-% ADRecordCalibrationImages(camL, camR, numOfimages)
-% pause;
-% % use stereoCalibration app for extracting stereoParams object
-% 
-% input('Press any key to continue...');
-save('stereoParams.mat','stereoParams')
-% 
-% % validate calibration
+ADRecordCalibrationImages(camL, camR, numOfimages)
+pause;
+
+%%
+% use stereoCalibration app for extracting stereoParams object
+
+input('Press any key to continue...');
+save('stereoParams.mat','stereoParams');
+
+
+%%
+
+% validate calibration
 disp('Validate the rectification process')
 preview(camR);
 preview(camL);
