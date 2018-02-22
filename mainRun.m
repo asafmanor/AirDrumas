@@ -11,7 +11,6 @@ addpath('Samples');
 
 if strcmp(runMode, 'Live')
     params = ADLoadParams();
-    % test asaf
     params.numOfSticks = 2;
     params.playerPosition = [102 0];
     params.drums{1}.shift = 8.5;
@@ -20,8 +19,9 @@ if strcmp(runMode, 'Live')
     params.minAngle = 0;
     params.maxAngle = 170;
     params.numOfDrums = 3;
-    %params.drumGauges = gauges;
-    % test - asaf
+    if ~(record.recordStickLoc || record.recordFrames)
+        params.drumGauges = gauges;
+    end
 end
 
 if strcmp(runMode, 'Live')
@@ -90,7 +90,6 @@ elseif strcmp(runMode, 'Test')
         stickLoc = recordStickLoc{t};
         [drumSound, lastLoc] = ADDecision3(stickLoc, params, lastLoc);
         ADSound2(drumSound, params);
-        %pause(rate);
     end
 end
 
