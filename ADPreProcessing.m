@@ -8,10 +8,4 @@ ppFrame = frame;
 if params.pp.resize.enable
 	ppFrame = imresize(ppFrame, params.pp.resize.resizeFactor);
 end
-if params.pp.gausssianFilter.enable
-	ppFrame = imgaussfilt(ppFrame, params.pp.gausssianFilter.sigma);
-end
-if params.pp.medianFilter.enable
-	ppFrame = medfilt2(ppFrame, params);
-end
 end

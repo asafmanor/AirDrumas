@@ -1,42 +1,26 @@
-function saveStr = mainRunFunc(runMode, recordStickLoc, recordFrames, recordTime, loadStr)
+function saveStr = mainRunFunc(runMode, record, loadStr, params)
 close all; clc;
 global KEY_IS_PRESSED
 KEY_IS_PRESSED = 0;
 
 % record variables
-record.recordStickLoc = recordStickLoc;
-record.recordFrames   = recordFrames;
 saveStr = '';
-
 addpath('Samples');
 
 if strcmp(runMode, 'Live')
-    params = ADLoadParams();
-    params.numOfSticks = 2;
-    params.playerPosition = [102 0];
-    params.drums{1}.shift = 8.5;
-    params.drums{2}.shift = 9;
-    params.drums{3}.shift = 12;
-    params.minAngle = 0;
-    params.maxAngle = 170;
-    params.numOfDrums = 3;
+    if ~exist('params', 'var')
+        error('in Live mode, you must give mainRunFunc the params struct');
+    end
+    % if we are not recording, we can display gauges
     if ~(record.recordStickLoc || record.recordFrames)
         params.drumGauges = gauges;
-    end
-end
-
-if strcmp(runMode, 'Live')
-    if ~exist('camR','var')
-        camR = webcam(2);
-    end
-    if ~exist('camL', 'var')
-        camL = webcam(3);
-    end
-    %ADInitializeRecordingSession(camR, camL, params)
+    end 
+    camR = webcam(2);
+    camL = webcam(3);
     % init state for drum machine
     frames{1} = snapshot(camR);
     frames{2} = snapshot(camL); % #2 is left camera!
-    lastLoc = ADInitState2(frames, params);
+    lastLoc = ADInitState2(frames, params, params.displayAnaglyph);
     if record.recordStickLoc
         record.stickLoc{1} = lastLoc;
     end
@@ -57,12 +41,12 @@ if strcmp(runMode, 'Live')
             record.stickLoc{t} = stickLoc;
         end
         if record.recordFrames
-            record_frames = cellfun(@(x) imresize(x, 1/2), frames, 'UniformOutput', false);
-            record.frames{t} = record_frames;
+            %record_frames = cellfun(@(x) imresize(x, 1/2), frames, 'UniformOutput', false);
+            record.frames{t} = frames;
         end
         [drumSound, lastLoc] = ADDecision3(stickLoc, params, lastLoc);
         ADSound2(drumSound, params);
-        if exist('recordTime', 'var') && toc > recordTime
+        if isfield(record, 'recordTime') && toc > recordTime
             break;
         end
     end
@@ -75,8 +59,9 @@ if strcmp(runMode, 'Live')
         saveStr = str;
     end
 elseif strcmp(runMode, 'Test')
+    load([loadStr,'.mat'], 'record');
     if ~exist('params', 'var')
-        load([loadStr,'.mat']);
+        load([loadStr,'.mat'], 'params');
     end
     params.drumGauges = gauges;
     % unpack record struct
@@ -90,9 +75,9 @@ elseif strcmp(runMode, 'Test')
     dispParams = CalcOfflineDispParams(params, recordFrames{2}{1});
     
     for t = 2:totalFrames
-%         if exist('recordFrames', 'var')
-%             imshow(recordFrames{t}{1}); % show right camera
-%         end
+        %         if exist('recordFrames', 'var')
+        %             imshow(recordFrames{t}{1}); % show right camera
+        %         end
         stickLoc = recordStickLoc{t};
         [drumSound, lastLoc] = ADDecision3(stickLoc, params, lastLoc);
         ADSound2(drumSound, params);

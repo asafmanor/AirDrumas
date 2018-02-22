@@ -3,7 +3,7 @@ function [lastLoc] = ADInitState2(frames ,params, displayAnaglyph)
 stickLoc = ADLocationPerTimestep(frames, params, displayAnaglyph);
 
 for n = 1 : params.numOfSticks
-	if stickLoc{n}.found == false
+    if stickLoc{n}.found == false
         lastLoc{n}.shift = 0;
         lastLoc{n}.x     = 0;
         lastLoc{n}.y     = 0;

@@ -8,12 +8,9 @@ params.numOfSticks = 1;
 params.numOfDrums = 3;
 params.kit = 0;
 params.origFrameSize = [1280 720];
+params.displayAnaglyph = false; % for diaplaying the Anaglyph on initialization.
 
 % pre-processing params
-params.pp.gausssianFilter.enable = false;
-params.pp.gausssianFilter.sigma = 0.5;
-params.pp.medianFilter.enable = false;
-params.pp.medianFilter.kernel = [3 3];
 params.pp.resize.enable = true;
 params.pp.resize.resizeFactor = 1/4;
 
@@ -56,9 +53,8 @@ params.lockOfStick{2} = 0;
 % stereo vision params
 try
     temp = load('stereoParams.mat');
-    params.stereoParams = temp.stereoParams2;
+    params.stereoParams = temp.stereoParams;
 catch
-    params.stereoParams = struct();
-    warning('stereoParams.mat does not exist!');
+    error('stereoParams.mat does not exist!');
 end
 end
