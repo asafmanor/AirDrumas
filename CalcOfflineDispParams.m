@@ -13,7 +13,7 @@ dispParams.offset       = 100;
 thZ                 = 10;
 [Ybound,Xbound, ~]  = size(frame); 
 medShift            = params.drums{2}.shift;
-Zbounds             = [max(medShift - thZ,0) medShift - thZ];
+Zbounds             = [max(medShift - thZ,0) medShift + thZ];
 dispParams.bounds   = [1 Xbound 1 Ybound Zbounds];
 
 end

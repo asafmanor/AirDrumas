@@ -4,11 +4,11 @@ function DisplayPerTimeStamp(stickLoc,frame,dispParams)
 
 
 %% Extract position from stickLoc and fix orientation
-frame = flipud(frame);
+%frame = flipud(frame);
 stickPos = nan(3,dispParams.numS);
 for stickInd = [1:dispParams.numS]
     if stickLoc{stickInd}.found
-        stickPos(:,stickInd) = [stickLoc{stickInd}.x Ybound - stickLoc{stickInd}.y stickLoc{stickInd}.shift]';
+        stickPos(:,stickInd) = [stickLoc{stickInd}.x stickLoc{stickInd}.y stickLoc{stickInd}.shift]';
     end
 end
 
