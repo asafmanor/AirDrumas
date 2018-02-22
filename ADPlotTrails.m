@@ -8,9 +8,13 @@ function ADPlotTrails(stickLoc,params)
 
 %% params defeintions
 persistent trails
-trailLen    = 100;
+if isempty(trails)
+    trails = {[],[]};
+end
+trailLen    = 3;
 alphaValues = linspace(1,0,trailLen)'; %for transparency
 imBounds = [1 1280 1 720]*params.pp.resize.resizeFactor;
+colors = {'r', 'b'};
 
 %% update trails
 for stickInd = 1:params.numOfSticks
@@ -35,7 +39,7 @@ end
 for alphaInd = 1:length(alphaValues)
     for stickInd = 1:params.numOfSticks
         scatter3(trails{stickInd}(alphaInd,1),trails{stickInd}(alphaInd,2),trails{stickInd}(alphaInd,3),...
-            'MarkerFaceColor','r','MarkerEdgeColor','r','MarkerFaceAlpha'...
+            'MarkerFaceColor',colors{stickInd},'MarkerEdgeColor',colors{stickInd},'MarkerFaceAlpha'...
             ,alphaValues(alphaInd),'MarkerEdgeAlpha',alphaValues(alphaInd));
         hold all;
         grid on;
