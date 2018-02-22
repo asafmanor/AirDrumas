@@ -11,7 +11,7 @@ offlineData = ADInitOfflineData(offlineData);
 runMode = 'live';
 
 % test asaf
-params.numOfSticks = 2;
+params.numOfSticks = 1;
 params.playerPosition = [210 0];
 params.drums{1}.shift = 65;
 params.drums{2}.shift = 69;
