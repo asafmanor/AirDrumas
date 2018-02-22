@@ -47,11 +47,16 @@ params.playerPosition = [0 0];
 for n = 1:params.numOfDrums
     params.drums{n}.shift = 0;
 end
+% for decision type #4
+params.marginOpenLock = 0.8; % margin for openning the lock while rising the stick 
+params.marginHit = 2; % margin for global threshold for lowering the stick
+params.lockOfStick{1} = 0;
+params.lockOfStick{2} = 0;
 
 % stereo vision params
 try
     temp = load('stereoParams.mat');
-    params.stereoParams = temp.stereoParams;
+    params.stereoParams = temp.stereoParams2;
 catch
     params.stereoParams = struct();
     warning('stereoParams.mat does not exist!');

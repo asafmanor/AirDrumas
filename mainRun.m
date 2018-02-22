@@ -1,35 +1,35 @@
-close all; clc;
+close all; clc; clear;
 global KEY_IS_PRESSED
 KEY_IS_PRESSED = 0;
 
 % record variables
-record.recordStickLoc = false;
-record.recordFrames   = false;
+record.recordStickLoc = true;
+record.recordFrames   = true;
 
-runMode = 'Live';
+runMode = 'Test';
 addpath('Samples');
 
 if strcmp(runMode, 'Live')
     params = ADLoadParams();
     % test asaf
     params.numOfSticks = 2;
-    params.playerPosition = [110 0];
-    params.drums{1}.shift = 59;
-    params.drums{2}.shift = 59;
-    params.drums{3}.shift = 61;
-    params.minAngle = 25;
-    params.maxAngle = 160;
+    params.playerPosition = [102 0];
+    params.drums{1}.shift = 8.5;
+    params.drums{2}.shift = 9;
+    params.drums{3}.shift = 12;
+    params.minAngle = 0;
+    params.maxAngle = 170;
     params.numOfDrums = 3;
-    params.drumGauges = gauges;
+    %params.drumGauges = gauges;
     % test - asaf
 end
 
 if strcmp(runMode, 'Live')
     if ~exist('camR','var')
-        camR = webcam(3);
+        camR = webcam(2);
     end
     if ~exist('camL', 'var')
-        camL = webcam(2);
+        camL = webcam(3);
     end
     %ADInitializeRecordingSession(camR, camL, params)
     % init state for drum machine
@@ -56,7 +56,8 @@ if strcmp(runMode, 'Live')
             record.stickLoc{t} = stickLoc;
         end
         if record.recordFrames
-            record.frames{t} = frames;
+            record_frames = cellfun(@(x) imresize(x, 1/2), frames, 'UniformOutput', false);
+            record.frames{t} = record_frames;
         end
         [drumSound, lastLoc] = ADDecision3(stickLoc, params, lastLoc);
         ADSound2(drumSound, params);
@@ -70,7 +71,7 @@ if strcmp(runMode, 'Live')
     end
 elseif strcmp(runMode, 'Test')
     if ~exist('params', 'var')
-        load('rec_0_10.mat')
+        load('rec_10_52.mat')
     end
     params.drumGauges = gauges;
     % unpack record struct
