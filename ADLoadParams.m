@@ -56,7 +56,7 @@ params.lockOfStick{2} = 0;
 % stereo vision params
 try
     temp = load('stereoParams.mat');
-    params.stereoParams = temp.stereoParams2;
+    params.stereoParams = temp.stereoParams;
 catch
     params.stereoParams = struct();
     warning('stereoParams.mat does not exist!');

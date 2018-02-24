@@ -6,7 +6,7 @@ KEY_IS_PRESSED = 0;
 record.recordStickLoc = true;
 record.recordFrames   = true;
 
-runMode = 'Test';
+runMode = 'Live';
 addpath('Samples');
 
 if strcmp(runMode, 'Live')
