@@ -1,10 +1,12 @@
 close all; clc;
 addpath('Samples');
 
-params.xy.maskTh = [55 -25]; % red, blue
-params.xy.maskChannel = [2 3]; % A, B channels
-params.xy.cropSize = [50 50];
 params.displayAnaglyph = false;
+params.xy.maskTh = [55 25]; % red, blue
+params.xy.maskChannel = [2 3]; % A, B channels
+params.xy.negativeChannel = [0 1];
+params.xy.cropSize = [200 200];
+params.pp.resize.resizeFactor = 1/2;
 
 frames{1} = record.frames{2}{1};
 frames{2} = record.frames{2}{2};

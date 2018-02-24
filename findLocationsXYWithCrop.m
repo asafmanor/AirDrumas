@@ -10,11 +10,11 @@ stickLoc = cell(N,1);
 sticksFound = zeros(1,N);
 
 for n = 1:N
-    break;
+    %break;
     if ~isempty(lastLoc) && lastLoc{n}.found % was found last time! % TODO asaf remove isempty after fix init
         [crop, offsetX, offsetY] = cropForLAB(frame, [lastLoc{n}.x, lastLoc{n}.y], params);
-        LABforCrop = rgb2lab(crop);
-        [props, largestCC, sticksFound(n)] = performRegionPropsOnMask(LABforCrop, params, n);
+        LABonCrop = rgb2lab(crop);
+        [props, largestCC, sticksFound(n)] = performRegionPropsOnMask(LABonCrop, params, n);
         if sticksFound(n)
             centers = cat(1, props.Centroid);
             centers = centers(largestCC, :); % take N biggest elements
@@ -45,8 +45,10 @@ end
 end
 
 function [props, largestCC, stickFound] = performRegionPropsOnMask(LAB, params, n)
+p = params.xy;
 reqProps = {'Centroid', 'Area'};
-props = regionprops(LAB(:,:,params.xy.maskChannel(n)) > params.xy.maskTh(n), reqProps);
+%imshow((-1)^p.negativeChannel(n) * LAB(:,:,p.maskChannel(n)) > p.maskTh(n));
+props = regionprops((-1)^p.negativeChannel(n) * LAB(:,:,p.maskChannel(n)) > p.maskTh(n), reqProps);
 if size(props,1) > 1 % more then N connected components
     [~, largestCC] = sort([props.Area], 'descend'); % get biggest elements indices
     largestCC = largestCC(1);

@@ -15,10 +15,9 @@ params.pp.resize.enable = true;
 params.pp.resize.resizeFactor = 1/4;
 
 % xy location params
-%params.xy.redMaskTh = 55;
-%params.xy.blueMaskTh = -25;
-params.xy.maskTh = [55 -25]; % red, blue
+params.xy.maskTh = [55 25]; % red, blue
 params.xy.maskChannel = [2 3]; % A, B channels
+params.xy.negativeChannel = [0 1];
 params.xy.cropSize = [50 50];
 
 % drum kit params

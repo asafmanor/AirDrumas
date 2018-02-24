@@ -30,8 +30,6 @@ if displayAnaglyph
     close;
 end
 
-%[stickLocRight, sticksFoundLeft] = ADFindLocationsXY(rect_frames{1}, params);
-%[stickLocLeft, sticksFoundRight]  = ADFindLocationsXY(rect_frames{2}, params);
 [stickLocRight, sticksFoundRight] = findLocationsXYWithCrop(rect_frames{1}, lastLoc, params);
 [stickLocLeft, sticksFoundLeft]   = findLocationsXYWithCrop(rect_frames{2}, lastLoc, params);
 sticksFound = sticksFoundLeft .* sticksFoundRight; % a vector of two boolean elements
