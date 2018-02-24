@@ -8,7 +8,12 @@ function ADOfflineMode(offlineData,params)
 [dispParams,frames,stickPos] = ADCalcDisplayParams(offlineData,params);
 
 %% Display offline results
-ADOfflineDisplay(stickPos,frames,dispParams);
+for t = 1:length(offlineData{1})
+    %ADOfflineDisplay(stickPos,frames,dispParams);
+    
+    DisplayPerTimeStamp(stickPos(t,:,:),frames{t},dispParams);
+    pause(.01);
+end
 
 end
 
