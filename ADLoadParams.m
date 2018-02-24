@@ -3,8 +3,10 @@ function [params] = ADLoadParams()
 % this is the only part where the user should intervene and make changes.
 
 % OUTPUTS:  params: parameters struct
+global kit;
+kit=0;
 
-params.numOfSticks = 1;
+params.numOfSticks = 2;
 params.numOfDrums = 3;
 params.kit = 0;
 params.origFrameSize = [1280 720];
@@ -15,10 +17,12 @@ params.pp.resize.enable = true;
 params.pp.resize.resizeFactor = 1/4;
 
 % xy location params
-params.xy.redMaskTh = 55;
-params.xy.blueMaskTh = -25;
+params.xy.redMaskTh = 45;
+params.xy.blueMaskTh = -40;
 
 % drum kit params
+% for decision type 3_5 and 4_5
+params.y=40;
 % for decision type #1,2 (not used)
 params.xmargin = 20;
 params.ymargin = 20;
@@ -31,12 +35,29 @@ for n = 1:params.numOfDrums
  end
 
 % for decision type #2,3 (sound, fs, name, shift)
-[params.drums{1}.Sound, params.drums{1}.fs] = audioread('Samples/04.wav'); % hi-hat
-[params.drums{2}.Sound, params.drums{2}.fs] = audioread('Samples/00.wav'); % snare
-[params.drums{3}.Sound, params.drums{3}.fs] = audioread('Samples/Kick006.wav'); % bass-drum
-params.drums{1}.name = 'hihat';
-params.drums{2}.name = 'snare';
-params.drums{3}.name = 'floor';
+if kit==0
+    [params.drums{1}.Sound, params.drums{1}.fs] = audioread('Samples/04.wav'); % hi-hat
+    [params.drums{2}.Sound, params.drums{2}.fs] = audioread('Samples/00.wav'); % snare
+    [params.drums{3}.Sound, params.drums{3}.fs] = audioread('Samples/01.wav'); % floor-drum
+    [params.drums{4}.Sound, params.drums{4}.fs] = audioread('Samples/02.wav'); % tam-drum
+    [params.drums{5}.Sound, params.drums{5}.fs] = audioread('Samples/05.wav'); % crash-drum
+    params.drums{1}.name = 'hihat';
+    params.drums{2}.name = 'snare';
+    params.drums{3}.name = 'floor';
+    params.drums{4}.name = 'tam';
+    params.drums{5}.name = 'crash';
+else
+    [params.drums{1}.Sound, params.drums{1}.fs] = audioread('Samples/14.wav'); % hi-hat
+    [params.drums{2}.Sound, params.drums{2}.fs] = audioread('Samples/10.wav'); % snare
+    [params.drums{3}.Sound, params.drums{3}.fs] = audioread('Samples/11.wav'); % kick-drum
+    [params.drums{4}.Sound, params.drums{4}.fs] = audioread('Samples/12.wav'); % tam-drum
+    [params.drums{5}.Sound, params.drums{5}.fs] = audioread('Samples/15.wav'); % clap-drum
+    params.drums{1}.name = 'hihat';
+    params.drums{2}.name = 'snare';
+    params.drums{3}.name = 'kick';
+    params.drums{4}.name = 'tam';
+    params.drums{5}.name = 'clap'; 
+end
 
 params.maxAngle = 90;
 params.minAngle = -90;
