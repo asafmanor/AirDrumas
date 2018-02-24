@@ -1,4 +1,4 @@
-function [stickLoc] = ADLocationPerTimestep(frames, params, displayAnaglyph)
+function [stickLoc] = ADLocationPerTimestep(frames, params, displayAnaglyph, lastLoc)
 % given two frames acquired from the two cameras, and extra data extracted
 % from previous frames such as estimated stickLoc, this function runs all necessary 
 % processes such as pre-processing, stick location finding and depth extraction.
@@ -30,8 +30,10 @@ if displayAnaglyph
     close;
 end
 
-[stickLocRight, sticksFoundLeft] = ADFindLocationsXY(rect_frames{1}, params);
-[stickLocLeft, sticksFoundRight]  = ADFindLocationsXY(rect_frames{2}, params);
+%[stickLocRight, sticksFoundLeft] = ADFindLocationsXY(rect_frames{1}, params);
+%[stickLocLeft, sticksFoundRight]  = ADFindLocationsXY(rect_frames{2}, params);
+[stickLocRight, sticksFoundRight] = findLocationsXYWithCrop(rect_frames{1}, lastLoc, params);
+[stickLocLeft, sticksFoundLeft]   = findLocationsXYWithCrop(rect_frames{2}, lastLoc, params);
 sticksFound = sticksFoundLeft .* sticksFoundRight; % a vector of two boolean elements
 stickLoc = ADFindShift({stickLocRight, stickLocLeft}, sticksFound);
 

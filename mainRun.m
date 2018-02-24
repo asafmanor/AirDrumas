@@ -51,7 +51,7 @@ if strcmp(runMode, 'Live')
         drawnow
         frames{1} = snapshot(camR);
         frames{2} = snapshot(camL); % #2 is left camera!
-        stickLoc = ADLocationPerTimestep(frames, params);
+        stickLoc = ADLocationPerTimestep(frames, params, false, lastLoc);
         if record.recordStickLoc
             record.stickLoc{t} = stickLoc;
         end

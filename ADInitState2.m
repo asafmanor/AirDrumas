@@ -1,6 +1,6 @@
-function [lastLoc] = ADInitState2(frames ,params, displayAnaglyph)
+function [lastLoc] = ADInitState2(frames ,params)
 
-stickLoc = ADLocationPerTimestep(frames, params, displayAnaglyph);
+stickLoc = ADLocationPerTimestep(frames, params, params.displayAnaglyph, []);
 
 for n = 1 : params.numOfSticks
     if stickLoc{n}.found == false
