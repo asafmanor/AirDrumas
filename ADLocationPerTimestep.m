@@ -12,12 +12,15 @@ function [stickLoc] = ADLocationPerTimestep(frames, params, displayAnaglyph)
 % calibration object is stored in params.calib
 
 % pre-process, extract features
+global rectifiedRec
+
 if ~exist('displayAnaglyph','var')
     displayAnaglyph = false;
 end
 
 pp_frames = cellfun(@(x) ADPreProcessing(x, params), frames, 'UniformOutput', false);
 [rect_frames{2}, rect_frames{1}] = rectifyStereoImages(pp_frames{2}, pp_frames{1}, params.stereoParams);
+rectifiedRec = rect_frames;
 
 if displayAnaglyph
     figure;

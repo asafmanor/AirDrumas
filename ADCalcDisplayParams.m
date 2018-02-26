@@ -15,7 +15,7 @@ stickPos    = [];
 dispParams.numS         = length(offlineData);
 dispParams.numD         = params.numOfDrums;
 dispParams.drumR        = params.drumR;
-dispParams.method       = 'trails';
+dispParams.method       = 'tra';
 dispParams.trLength     = 3;
 dispParams.colors       = {'r','b','y'};
 dispParams.fps          = 24;
@@ -43,13 +43,13 @@ Zbounds             = [max((1-thZ)*medZ,0) (1+thZ)*medZ];
 
 dispParams.bounds   = [1 Xbound 1 Ybound Zbounds];
 
-%% Fix orientation
-for posInd = 1:length(offlineData{s}) %pos loop
-    frames{posInd} = flipud(frames{posInd});
-    for s = 1:dispParams.numS %stick loop
-        stickPos(posInd,2,s) = Ybound - stickPos(posInd,2,s); 
-    end
-end
+% %% Fix orientation
+% for posInd = 1:length(offlineData{s}) %pos loop
+%     frames{posInd} = flipud(frames{posInd});
+%     for s = 1:dispParams.numS %stick loop
+%         stickPos(posInd,2,s) = Ybound - stickPos(posInd,2,s); 
+%     end
+% end
 
 %% Define alphaValues for transperacy
 dispParams.alphaValues = linspace(0,1,dispParams.trLength);
