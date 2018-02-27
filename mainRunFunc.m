@@ -72,7 +72,7 @@ elseif strcmp(runMode, 'Test')
     
     for t = 2:totalFrames
 %                 if exist('recordFrames', 'var')
-%                     imshow(recordFrames{t}); % show right camera
+%                     imshow(recordFrames{t}{1}); % show right camera
 %                 end
         stickLoc = recordStickLoc{t};
         [drumSound, lastLoc, params] = ADDecision4_5(stickLoc, params, lastLoc);
