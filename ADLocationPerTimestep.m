@@ -33,8 +33,20 @@ if displayAnaglyph
     close;
 end
 
-[stickLocRight, sticksFoundRight] = findLocationsXYWithCrop(rect_frames{1}, lastLoc, params);
-[stickLocLeft, sticksFoundLeft]   = findLocationsXYWithCrop(rect_frames{2}, lastLoc, params);
+switch params.xy.searchMethod
+	case 'lastLocCrop'
+		[stickLocRight, sticksFoundRight] = findLocationsXYWithCrop(rect_frames{1}, lastLoc, params);
+		[stickLocLeft, sticksFoundLeft]   = findLocationsXYWithCrop(rect_frames{2}, lastLoc, params);
+	case 'horizontalLine'
+		[stickLocRight, sticksFoundRight] = findLocationsXYWithCrop(rect_frames{1}, [], params);
+		[stickLocLeft, sticksFoundLeft]   = findLocationsXYWithCrop(rect_frames{2}, stickLocRight, params);
+	case 'full'
+		[stickLocRight, sticksFoundRight] = findLocationsXYWithCrop(rect_frames{1}, [], params);
+		[stickLocLeft, sticksFoundLeft]   = findLocationsXYWithCrop(rect_frames{2}, [], params);
+	otherwise
+		error('searchMethod is not recognized');
+end
+
 sticksFound = sticksFoundLeft .* sticksFoundRight; % a vector of two boolean elements
 stickLoc = ADFindShift({stickLocRight, stickLocLeft}, sticksFound);
 

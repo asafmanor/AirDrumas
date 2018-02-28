@@ -1,6 +1,7 @@
-function [stickLoc, sticksFound] = findLocationsXYWithCrop(frame, lastLoc, params)
+function [stickLoc, sticksFound] = findLocationsXYWithCrop(frame, refLoc, params)
 % returns stickLoc(n).x and stickLoc(n).y for n sticks (usually 2)
 % INPUTS: 	frame - from main camera
+%           refLoc - reference location for crop, depends on method for crop
 %			params - parameters struct
 % OUTPUTS: 	stickLoc - stickLoc struct
 
@@ -8,11 +9,16 @@ N = params.numOfSticks;
 stickLoc = cell(N,1);
 
 sticksFound = zeros(1,N);
+performFullFrameSearch = strcmp(params.xy.searchMethod, 'full');
 
 for n = 1:N
-    %break;
-    if ~isempty(lastLoc) && lastLoc{n}.found % was found last time! % TODO asaf remove isempty after fix init
-        [crop, offsetX, offsetY] = cropForLAB(frame, [lastLoc{n}.x, lastLoc{n}.y], params);
+    if ~isempty(refLoc) && refLoc{n}.found % was found last time!
+        if strcmp(params.xy.searchMethod, 'lastLocCrop')
+            [crop, offsetX, offsetY] = cropAroundPoint(frame, [refLoc{n}.x, refLoc{n}.y], params);
+        elseif strcmp(params.xy.searchMethod, 'horizontalLine')
+            crop = cropHorizontalLine(frame, refLoc{n}.y, params);
+            offsetX = 0;
+        end
         LABonCrop = rgb2lab(crop);
         [props, largestCC, sticksFound(n)] = performRegionPropsOnMask(LABonCrop, params, n);
         if sticksFound(n)
@@ -20,11 +26,17 @@ for n = 1:N
             centers = centers(largestCC, :); % take N biggest elements
             stickLoc{n}.x = centers(1,1) + offsetX;
             stickLoc{n}.y = centers(1,2) + offsetY;
+        elseif strcmp(params.xy.searchMethod, 'horizontalLine')
+            % in horizontal line method, if we found the stick in the ref image, we MUST find it in this one.
+            % otherwise we should'nt even look for it.
+            performFullFrameSearch = true;
         end
     end
 end
-% if we didn't find all sticks, perform a full LAB search
-if ~(all(sticksFound) == true)
+
+% in lastLocCrop method we will conduct a full frame search if not all sticks were found
+performFullFrameSearch = performFullFrameSearch || (strcmp(params.xy.searchMethod, 'lastLocCrop') && ~(all(sticksFound) == true));
+if performFullFrameSearch
     LABfull = rgb2lab(frame);
 end
 
@@ -60,4 +72,30 @@ else
     largestCC = [];
     stickFound = false;
 end
+end
+
+function [crop, x1, y1] = cropAroundPoint(frame, cropCenter, params)
+% return the crop image of the cell defined by the cell's COM in size [params.crop.cropSize]
+% INPUTS:   frame - image
+%           params - parameters struct for the TDG
+%           cropCenter - crop around this index  
+% OUTPUTS:  crop - crop greyscale image size [params.crop.cropSize] 
+%           x1 - shift in x
+%           y1 - shift in y
+
+h  = params.xy.cropSize(1);
+w  = params.xy.cropSize(2);
+y1 = max(round(cropCenter(1)-h/2),1);
+y2 = min(round(cropCenter(1)+h/2),size(frame,1));
+x1 = max(round(cropCenter(2)-w/2),1);
+x2 = min(round(cropCenter(2)+w/2),size(frame,2));
+crop = frame(y1:y2, x1:x2, :);
+end
+
+function [crop, offsetY] = cropHorizontalLine(frame, y, params)
+    dy = params.xy.dy;
+    top     = max(y - dy, 1);
+    bottom  = min(y + dy, size(frame(1)));
+    crop = frame(top:bottom, :);
+    offsetY = top; %TODO asaf - validate this is the right offset
 end
