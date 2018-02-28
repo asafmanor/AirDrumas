@@ -1,4 +1,6 @@
 calibPictures/
-data_capture_2.mat
+CalibData/
 *.asv
-rec*
+rec_*
+*.png
+accuracyAndPrecision.mat

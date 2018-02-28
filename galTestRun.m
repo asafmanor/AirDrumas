@@ -1,4 +1,4 @@
-clear all; close all; 
+clear all; close all;
 % %%
 % sticLoc1 = [1:0.1:10; 1:0.1:10; 1:0.1:10]';
 % sticLoc2 = [10:-0.1:1; 10:-0.1:1; 10:-0.1:1]';
@@ -20,12 +20,16 @@ clear all; close all;
 % x = (cos(2*t).^2).*sin(t);
 % y = (sin(2*t).^2).*cos(t);
 % comet3(x,y,t,0.01);
+
+
 load(fullfile('Offline','offlineData.mat'));
 clear offlineData;
 %load('C:\Users\glifshitz\Documents\GitHub\AirDrums\Offline\record1.mat')
  load(fullfile('Offline','record2.mat'));
+frames = {offlineData{1}(11).frame,offlineData{2}(11).frame};
+%ADOfflineMode(offlineData,params);
 
-ADOfflineMode(offlineData,params);
+
 
 
 

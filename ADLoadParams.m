@@ -4,7 +4,7 @@ function [params] = ADLoadParams()
 
 % OUTPUTS:  params: parameters struct
 
-params.numOfSticks = 1;
+params.numOfSticks = 2;
 params.numOfDrums = 3;
 params.kit = 0;
 params.origFrameSize = [1280 720];
@@ -21,36 +21,48 @@ params.xy.negativeChannel = [0 1];
 params.xy.cropSize = [50 50];
 
 % drum kit params
-% for decision type #1,2 (not used)
-params.xmargin = 20;
-params.ymargin = 20;
-params.zmargin = 5;
-params.margin = 0;
-params.drumR = 50;
-for n = 1:params.numOfDrums
-    params.drums{n}.x = 0;
-    params.drums{n}.y = 0;
- end
 
-% for decision type #2,3 (sound, fs, name, shift)
-[params.drums{1}.Sound, params.drums{1}.fs] = audioread('Samples/04.wav'); % hi-hat
-[params.drums{2}.Sound, params.drums{2}.fs] = audioread('Samples/00.wav'); % snare
-[params.drums{3}.Sound, params.drums{3}.fs] = audioread('Samples/Kick006.wav'); % bass-drum
-params.drums{1}.name = 'hihat';
-params.drums{2}.name = 'snare';
-params.drums{3}.name = 'floor';
+if params.kit == 0
+    [params.drums{1}.Sound, params.drums{1}.fs] = audioread('Samples/04.wav'); % hi-hat
+    [params.drums{2}.Sound, params.drums{2}.fs] = audioread('Samples/00.wav'); % snare
+    [params.drums{3}.Sound, params.drums{3}.fs] = audioread('Samples/01.wav'); % floor-drum
+    [params.drums{4}.Sound, params.drums{4}.fs] = audioread('Samples/02.wav'); % tam-drum
+    [params.drums{5}.Sound, params.drums{5}.fs] = audioread('Samples/05.wav'); % crash-drum
+    params.drums{1}.name = 'hihat';
+    params.drums{2}.name = 'snare';
+    params.drums{3}.name = 'floor';
+    params.drums{4}.name = 'tam';
+    params.drums{4}.Sound = 0.5 * params.drums{4}.Sound; % the tam is a bit noisy...
+    params.drums{5}.name = 'crash';
 
-params.maxAngle = 90;
-params.minAngle = -90;
+else
+    [params.drums{1}.Sound, params.drums{1}.fs] = audioread('Samples/14.wav'); % hi-hat
+    [params.drums{2}.Sound, params.drums{2}.fs] = audioread('Samples/10.wav'); % snare
+    [params.drums{3}.Sound, params.drums{3}.fs] = audioread('Samples/11.wav'); % kick-drum
+    [params.drums{4}.Sound, params.drums{4}.fs] = audioread('Samples/12.wav'); % tam-drum
+    [params.drums{5}.Sound, params.drums{5}.fs] = audioread('Samples/15.wav'); % clap-drum
+    
+    params.drums{1}.name = 'hihat';
+    params.drums{2}.name = 'snare';
+    params.drums{3}.name = 'kick';
+    params.drums{4}.name = 'tam';
+    params.drums{5}.name = 'clap'; 
+end
+
+
+params.maxAngle = 180;
+params.minAngle = 0;
 params.playerPosition = [0 0];
 for n = 1:params.numOfDrums
     params.drums{n}.shift = 0;
 end
+
 % for decision type #4
-params.marginOpenLock = 0.8; % margin for openning the lock while rising the stick 
-params.marginHit = 2; % margin for global threshold for lowering the stick
+params.marginOpenLock = 0.7; % margin for openning the lock while raising the stick 
+params.marginHit = 1; % margin for global threshold for lowering the stick
 params.lockOfStick{1} = 0;
 params.lockOfStick{2} = 0;
+params.drumsYLine = 80;
 
 % stereo vision params
 try

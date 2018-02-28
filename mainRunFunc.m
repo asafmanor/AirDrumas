@@ -1,7 +1,8 @@
-function saveStr = mainRunFunc(runMode, record, loadStr, params)
+function saveStr = mainRunFunc(runMode, cams, record, loadStr, params)
 close all; clc;
 global KEY_IS_PRESSED
 KEY_IS_PRESSED = 0;
+global rectifiedRec
 
 % record variables
 saveStr = '';
@@ -11,12 +12,8 @@ if strcmp(runMode, 'Live')
     if ~exist('params', 'var')
         error('in Live mode, you must give mainRunFunc the params struct');
     end
-    % if we are not recording, we can display gauges
-    if ~(record.recordStickLoc || record.recordFrames)
-        params.drumGauges = gauges;
-    end 
-    camR = webcam(2);
-    camL = webcam(3);
+    camR = cams(1);
+    camL = cams(2);
     % init state for drum machine
     frames{1} = snapshot(camR);
     frames{2} = snapshot(camL); % #2 is left camera!
@@ -41,12 +38,11 @@ if strcmp(runMode, 'Live')
             record.stickLoc{t} = stickLoc;
         end
         if record.recordFrames
-            %record_frames = cellfun(@(x) imresize(x, 1/2), frames, 'UniformOutput', false);
-            record.frames{t} = frames;
+            record.frames{t} = rectifiedRec;
         end
-        [drumSound, lastLoc] = ADDecision3(stickLoc, params, lastLoc);
+        [drumSound, lastLoc, params] = ADDecision4_5(stickLoc, params, lastLoc);
         ADSound2(drumSound, params);
-        if isfield(record, 'recordTime') && toc > recordTime
+        if isfield(record, 'recordTime') && toc > record.recordTime
             break;
         end
     end
@@ -60,10 +56,10 @@ if strcmp(runMode, 'Live')
     end
 elseif strcmp(runMode, 'Test')
     load([loadStr,'.mat'], 'record');
-    if ~exist('params', 'var')
+    if isempty(params)
         load([loadStr,'.mat'], 'params');
     end
-    params.drumGauges = gauges;
+    %params.drumGauges = gauges;
     % unpack record struct
     recordStickLoc = record.stickLoc;
     totalTime = record.totalTime;
@@ -75,11 +71,11 @@ elseif strcmp(runMode, 'Test')
     dispParams = CalcOfflineDispParams(params, recordFrames{2}{1});
     
     for t = 2:totalFrames
-        %         if exist('recordFrames', 'var')
-        %             imshow(recordFrames{t}{1}); % show right camera
-        %         end
+%                 if exist('recordFrames', 'var')
+%                     imshow(recordFrames{t}{1}); % show right camera
+%                 end
         stickLoc = recordStickLoc{t};
-        [drumSound, lastLoc] = ADDecision3(stickLoc, params, lastLoc);
+        [drumSound, lastLoc, params] = ADDecision4_5(stickLoc, params, lastLoc);
         ADSound2(drumSound, params);
         DisplayPerTimeStamp(stickLoc, recordFrames{t}{1}, dispParams);
     end

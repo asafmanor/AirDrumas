@@ -12,7 +12,7 @@ numOfDrums = params.numOfDrums;
 stickColor = {'Red', 'Blue'};
 clc
 for n = 1:N
-    if stickLoc{n}.found && lastLoc{n}.found
+    if stickLoc{n}.found %%&& lastLoc{n}.found
         locInPlayerCoordinates = [stickLoc{n}.x - player(1),  stickLoc{n}.y - player(2)];
         Angle = findAngle(locInPlayerCoordinates, [1 0]); % angle of stick location with reference to X axis
         fprintf('%s stick: x=%3.3f, y=%3.3f, shift=%3.3f , Angle = %3.3f\n',...
@@ -20,7 +20,7 @@ for n = 1:N
         for k = 1 : numOfDrums
             % find correct region
             if (Angle >= (minAngle + (k-1)*totAngle/numOfDrums) && Angle < (minAngle + (k)*totAngle/numOfDrums))
-                if (stickLoc{n}.shift <= drums{k}.shift && lastLoc{n}.shift > drums{k}.shift)
+                if (stickLoc{n}.shift <= drums{k}.shift && (~lastLoc{n}.found  || (lastLoc{n}.shift > drums{k}.shift)))
                     drumSound(n) = k;
                 end
                 % update gauge
