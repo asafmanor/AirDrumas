@@ -27,7 +27,7 @@ clear offlineData;
 %load('C:\Users\glifshitz\Documents\GitHub\AirDrums\Offline\record1.mat')
  load(fullfile('Offline','record2.mat'));
 frames = {offlineData{1}(11).frame,offlineData{2}(11).frame};
-%ADOfflineMode(offlineData,params);
+ADOfflineMode(offlineData,params);
 
 
 

@@ -20,7 +20,7 @@ end
 
 %% Plot
 figure(1);
-%set(gcf, 'Position', get(0, 'Screensize'));
+set(gcf, 'Position', get(0, 'Screensize'));
 
 subplot(1,2,1);
 for stickInd = [1:dispParams.numS]
