@@ -1,4 +1,4 @@
-function [stickLoc] = ADLocationPerTimestep(frames, params, displayAnaglyph, lastLoc)
+function [stickLoc] = ADLocationPerTimestep(frames, params, varargin)
 % given two frames acquired from the two cameras, and extra data extracted
 % from previous frames such as estimated stickLoc, this function runs all necessary 
 % processes such as pre-processing, stick location finding and depth extraction.
@@ -14,15 +14,23 @@ function [stickLoc] = ADLocationPerTimestep(frames, params, displayAnaglyph, las
 % pre-process, extract features
 global rectifiedRec
 
-if ~exist('displayAnaglyph','var')
-    displayAnaglyph = false;
-end
+p = inputParser;
+p.StructExpand = false;
+addParameter(p, 'displayAnaglyph', false);
+addParameter(p, 'rectifyFrames', true);
+addParameter(p, 'lastLoc', []);
+parse(p, varargin{:});
+options = p.Results;
 
-pp_frames = cellfun(@(x) ADPreProcessing(x, params), frames, 'UniformOutput', false);
-[rect_frames{2}, rect_frames{1}] = rectifyStereoImages(pp_frames{2}, pp_frames{1}, params.stereoParams);
+if options.rectifyFrames
+    pp_frames = cellfun(@(x) ADPreProcessing(x, params), frames, 'UniformOutput', false);
+	[rect_frames{2}, rect_frames{1}] = rectifyStereoImages(pp_frames{2}, pp_frames{1}, params.stereoParams);
+else
+	rect_frames = frames;
+end
 rectifiedRec = rect_frames;
 
-if displayAnaglyph
+if options.displayAnaglyph
     figure;
     [rect_frames_tmp{2}, rect_frames_tmp{1}] = rectifyStereoImages(frames{2}, frames{1}, params.stereoParams);
     imshow(stereoAnaglyph(rect_frames_tmp{1}, rect_frames_tmp{2}));title('Rectified images');
@@ -35,8 +43,8 @@ end
 
 switch params.xy.searchMethod
 	case 'lastLocCrop'
-		[stickLocRight, sticksFoundRight] = findLocationsXYWithCrop(rect_frames{1}, lastLoc, params);
-		[stickLocLeft, sticksFoundLeft]   = findLocationsXYWithCrop(rect_frames{2}, lastLoc, params);
+		[stickLocRight, sticksFoundRight] = findLocationsXYWithCrop(rect_frames{1}, options.lastLoc, params);
+		[stickLocLeft, sticksFoundLeft]   = findLocationsXYWithCrop(rect_frames{2}, options.lastLoc, params);
 	case 'horizontalLine'
 		[stickLocRight, sticksFoundRight] = findLocationsXYWithCrop(rect_frames{1}, [], params);
 		[stickLocLeft, sticksFoundLeft]   = findLocationsXYWithCrop(rect_frames{2}, stickLocRight, params);

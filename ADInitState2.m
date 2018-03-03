@@ -1,7 +1,11 @@
-function [lastLoc] = ADInitState2(frames ,params)
+function [lastLoc] = ADInitState2(frames ,params, framesAreRectified)
 
-stickLoc = ADLocationPerTimestep(frames, params, params.displayAnaglyph, []);
-
+% TODO asaf - change to inputParser?
+if exist('framesAreRectified', 'var') && framesAreRectified
+    stickLoc = ADLocationPerTimestep(frames, params, 'rectifyFrames', false);
+else
+    stickLoc = ADLocationPerTimestep(frames, params, 'displayAnaglyph');
+end
 for n = 1 : params.numOfSticks
     if stickLoc{n}.found == false
         lastLoc{n}.shift = 0;

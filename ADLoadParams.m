@@ -8,7 +8,7 @@ params.numOfSticks = 2;
 params.numOfDrums = 3;
 params.kit = 0;
 params.origFrameSize = [1280 720];
-params.displayAnaglyph = false; % for diaplaying the Anaglyph on initialization.
+%params.displayAnaglyph = false; % for diaplaying the Anaglyph on initialization.
 
 % pre-processing params
 params.pp.resize.enable = true;
@@ -18,6 +18,9 @@ params.pp.resize.resizeFactor = 1/4;
 params.xy.maskTh = [55 25]; % red, blue
 params.xy.maskChannel = [2 3]; % A, B channels
 params.xy.negativeChannel = [0 1];
+
+params.xy.searchMethod = 'horizontalLine';
+params.xy.dy = 10;
 params.xy.cropSize = [50 50];
 
 % drum kit params

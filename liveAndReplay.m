@@ -17,8 +17,8 @@ record.recordTime = 20;
 cams(1) = webcam(2);
 cams(2) = webcam(3);
 
-saveStr = mainRunFunc('Live', cams, record, [], params);
+saveStr = mainRunFunc('Live', 'cams', cams, 'record', recordOptions, 'params', params);
 input('Press any key to see your recording!')
-mainRunFunc('Test', cams, [], saveStr, []);
+mainRunFunc('PlayAll', 'loadStr', saveStr);
 close all;
 %delete [saveStr, '.mat']
