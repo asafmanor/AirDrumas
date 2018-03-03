@@ -18,10 +18,14 @@ params.pp.resize.resizeFactor = 1/4;
 params.xy.maskTh = [55 25]; % red, blue
 params.xy.maskChannel = [2 3]; % A, B channels
 params.xy.negativeChannel = [0 1];
-
 params.xy.searchMethod = 'horizontalLine';
 params.xy.dy = 10;
 params.xy.cropSize = [50 50];
+
+params.kalman.motionModel = 'ConstantAcceleration';
+params.kalman.initialEstimateError = [1 1 1]*1e5;
+params.kalman.motionNoise = [1, 1, 1];
+params.kalman.measurementNoise = 5;
 
 % drum kit params
 
@@ -51,7 +55,6 @@ else
     params.drums{4}.name = 'tam';
     params.drums{5}.name = 'clap'; 
 end
-
 
 params.maxAngle = 180;
 params.minAngle = 0;

@@ -102,12 +102,16 @@ elseif strcmp(runMode, 'PlayRect')
     end
     
     % test - asaf
-    % params.xy.searchMethod = 'full';
-    % params.xy.dy = 15;
-    % params.xy.maskTh = [55 25]; % red, blue
-    % params.xy.maskChannel = [2 3]; % A, B channels
-    % params.xy.negativeChannel = [0 1];
-    % params.numOfSticks = 1;
+    params.xy.searchMethod = 'full';
+    params.xy.dy = 15;
+    params.xy.maskTh = [55 25]; % red, blue
+    params.xy.maskChannel = [2 3]; % A, B channels
+    params.xy.negativeChannel = [0 1];
+    params.numOfSticks = 2;
+    params.kalman.motionModel = 'ConstantAcceleration';
+    params.kalman.initialEstimateError = [1 1 1]*1e5;
+    params.kalman.motionNoise = [1, 1, 1];
+    params.kalman.measurementNoise = 1;
     % test - asaf
     
     % unpack record struct
@@ -115,22 +119,20 @@ elseif strcmp(runMode, 'PlayRect')
     totalFrames = record.totalFrames;
     recordRectFrames = record.frames;
     
-    lastLoc = ADInitState2(record.frames{2}, params, true); % took second frames because first is empty
+    [lastLoc, kf] = ADInitState2(record.frames{2}, params, true); % took second frame pair because first is empty
     rate = totalTime / totalFrames;
     dispParams = CalcOfflineDispParams(params, recordRectFrames{2}{1});
     %test - asaf
-    profile on
     for t = 2:totalFrames
 %                 if exist('recordFrames', 'var')
 %                     imshow(recordFrames{t}{1}); % show right camera
 %                 end
-        stickLoc = ADLocationPerTimestep(recordRectFrames{t}, params, 'rectifyFrames', false);
+        [stickLoc, kf] = ADLocationPerTimestep(recordRectFrames{t}, params, 'rectifyFrames', false, 'kalmanFilter', kf);
         [drumSound, lastLoc, params] = ADDecision4_5(stickLoc, params, lastLoc);
         ADSound2(drumSound, params);
-%        DisplayPerTimeStamp(stickLoc, recordRectFrames{t}{1}, dispParams);
+        DisplayPerTimeStamp(stickLoc, recordRectFrames{t}{1}, dispParams);
     end
     %test - asaf
-    profile viewer
 end
 end
 

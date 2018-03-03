@@ -1,4 +1,4 @@
-function [stickLoc] = ADLocationPerTimestep(frames, params, varargin)
+function [stickLoc, kf] = ADLocationPerTimestep(frames, params, varargin)
 % given two frames acquired from the two cameras, and extra data extracted
 % from previous frames such as estimated stickLoc, this function runs all necessary 
 % processes such as pre-processing, stick location finding and depth extraction.
@@ -19,6 +19,7 @@ p.StructExpand = false;
 addParameter(p, 'displayAnaglyph', false);
 addParameter(p, 'rectifyFrames', true);
 addParameter(p, 'lastLoc', []);
+addParameter(p, 'kalmanFilter', []);
 parse(p, varargin{:});
 options = p.Results;
 
@@ -58,4 +59,17 @@ end
 sticksFound = sticksFoundLeft .* sticksFoundRight; % a vector of two boolean elements
 stickLoc = ADFindShift({stickLocRight, stickLocLeft}, sticksFound);
 
+if ~isempty(options.kalmanFilter)
+	kf = options.kalmanFilter;
+	for n = 1:params.numOfSticks
+		if stickLoc{n}.found
+			predict(kf{n});
+			correctedLocation = correct(kf{n}, convertLocationToVec(stickLoc{n}));
+		else
+			correctedLocation = predict(kf{n});
+        end
+		stickLoc{n} = convertVecToLocation(correctedLocation);
+		stickLoc{n}.found = true;
+	end
+end
 end
