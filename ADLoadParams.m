@@ -4,6 +4,12 @@ function [params] = ADLoadParams()
 
 % OUTPUTS:  params: parameters struct
 
+params.kalman.motionModel = 'ConstantAcceleration';
+params.kalman.initialEstimateError = [1 1 1]*1e5;
+params.kalman.motionNoise = [7, 7, 7];
+params.kalman.measurementNoise = 0.2;
+params.kalman.enable = false
+
 params.numOfSticks = 2;
 params.numOfDrums = 3;
 params.kit = 0;
@@ -15,17 +21,17 @@ params.pp.resize.enable = true;
 params.pp.resize.resizeFactor = 1/4;
 
 % xy location params
-params.xy.maskTh = [0.8 0.5]; % red, blue
-params.xy.maskChannel = [3 2]; % Cr, Cb channels
+params.xy.searchMethod = 'full';
+params.xy.dy = 15;
+params.xy.maskThYCbCr = [170 150]; % red, blue
+params.xy.maskThHsv = 0.4;
+params.xy.maskChannel = [3 2]; % A, B channels
 params.xy.negativeChannel = [0 0];
-params.xy.searchMethod = 'horizontalLine';
-params.xy.dy = 10;
-params.xy.cropSize = [50 50];
 
 params.kalman.motionModel = 'ConstantAcceleration';
 params.kalman.initialEstimateError = [1 1 1]*1e5;
-params.kalman.motionNoise = [1, 1, 1];
-params.kalman.measurementNoise = 5;
+params.kalman.motionNoise = [7, 7, 7];
+params.kalman.measurementNoise = 0.2;
 
 % drum kit params
 
@@ -41,7 +47,7 @@ if params.kit == 0
     params.drums{4}.name = 'tam';
     params.drums{4}.Sound = 0.5 * params.drums{4}.Sound; % the tam is a bit noisy...
     params.drums{5}.name = 'crash';
-
+    
 else
     [params.drums{1}.Sound, params.drums{1}.fs] = audioread('Samples/14.wav'); % hi-hat
     [params.drums{2}.Sound, params.drums{2}.fs] = audioread('Samples/10.wav'); % snare
@@ -53,7 +59,7 @@ else
     params.drums{2}.name = 'snare';
     params.drums{3}.name = 'kick';
     params.drums{4}.name = 'tam';
-    params.drums{5}.name = 'clap'; 
+    params.drums{5}.name = 'clap';
 end
 
 params.maxAngle = 180;
@@ -64,7 +70,7 @@ for n = 1:params.numOfDrums
 end
 
 % for decision type #4
-params.marginOpenLock = 0.7; % margin for openning the lock while raising the stick 
+params.marginOpenLock = 0.7; % margin for openning the lock while raising the stick
 params.marginHit = 1; % margin for global threshold for lowering the stick
 params.lockOfStick{1} = 0;
 params.lockOfStick{2} = 0;

@@ -6,7 +6,7 @@ function [dispParams] = CalcOfflineDispParams(params,frame)
 dispParams.numS         = params.numOfSticks;
 dispParams.numD         = params.numOfDrums;
 dispParams.drumR        = params.drumR;
-dispParams.colors       = {'r','b','y'};
+dispParams.colors       = {'k','b','y'};
 dispParams.offset       = 100;
 
 %% Calculate image bounds

@@ -8,6 +8,7 @@ stats.ffs = 0;
 stats.nffs = 0;
 
 p = inputParser;
+p.StructExpand = false;
 addParameter(p, 'cams', []);
 addParameter(p, 'recordStickLoc', false);
 addParameter(p, 'recordFrames', false);
@@ -32,7 +33,8 @@ if strcmp(runMode, 'Live')
     % init state for drum machine
     frames{1} = snapshot(camR);
     frames{2} = snapshot(camL); % #2 is left camera!
-    lastLoc = ADInitState2(frames, params);
+    %lastLoc = ADInitState2(frames, params);
+    [lastLoc, kf] = ADInitState2(frames, params, false);
     if options.recordStickLoc
         record.stickLoc{1} = lastLoc;
     end
@@ -48,7 +50,8 @@ if strcmp(runMode, 'Live')
         drawnow
         frames{1} = snapshot(camR);
         frames{2} = snapshot(camL); % #2 is left camera!
-        stickLoc = ADLocationPerTimestep(frames, params);
+        [stickLoc, kf] = ADLocationPerTimestep(frames, params, 'kalmanFilter', kf);
+        %stickLoc = ADLocationPerTimestep(frames, params);
         if options.recordStickLoc
             record.stickLoc{t} = stickLoc;
         end
@@ -104,9 +107,10 @@ elseif strcmp(runMode, 'PlayRect')
     % test - asaf
     params.xy.searchMethod = 'full';
     params.xy.dy = 15;
-    params.xy.maskTh = [55 25]; % red, blue
-    params.xy.maskChannel = [2 3]; % A, B channels
-    params.xy.negativeChannel = [0 1];
+    params.xy.maskThYCbCr = [170 150]; % red, blue
+    params.xy.maskThHsv = 0.4;
+    params.xy.maskChannel = [3 2]; % A, B channels
+    params.xy.negativeChannel = [0 0];
     params.numOfSticks = 2;
     params.kalman.motionModel = 'ConstantAcceleration';
     params.kalman.initialEstimateError = [1 1 1]*1e5;
@@ -123,6 +127,7 @@ elseif strcmp(runMode, 'PlayRect')
     rate = totalTime / totalFrames;
     dispParams = CalcOfflineDispParams(params, recordRectFrames{2}{1});
     %test - asaf
+    profile on
     for t = 2:totalFrames
 %                 if exist('recordFrames', 'var')
 %                     imshow(recordFrames{t}{1}); % show right camera
@@ -130,8 +135,9 @@ elseif strcmp(runMode, 'PlayRect')
         [stickLoc, kf] = ADLocationPerTimestep(recordRectFrames{t}, params, 'rectifyFrames', false, 'kalmanFilter', kf);
         [drumSound, lastLoc, params] = ADDecision4_5(stickLoc, params, lastLoc);
         ADSound2(drumSound, params);
-        DisplayPerTimeStamp(stickLoc, recordRectFrames{t}{1}, dispParams);
+        %DisplayPerTimeStamp(stickLoc, recordRectFrames{t}{1}, dispParams);
     end
+    profile viewer
     %test - asaf
 end
 end

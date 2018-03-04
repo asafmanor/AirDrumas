@@ -23,7 +23,8 @@ switch params.xy.searchMethod
             if ~isempty(refLoc) && refLoc{n}.found
                 [crop, offsetX, offsetY] = cropAroundPoint(frame, [refLoc{n}.x, refLoc{n}.y], params);
                 YCbCrOnCrop = rgb2ycbcr(crop);
-                [props, largestCC, sticksFound(n)] = performRegionPropsOnMask(YCbCrOnCrop, params, n);
+                HsvOnCrop   = rgb2hsv(crop);
+                [props, largestCC, sticksFound(n)] = performRegionPropsOnMask(YCbCrOnCrop, HsvOnCrop, params, n);
                 if sticksFound(n)
                     centers = cat(1, props.Centroid);
                     centers = centers(largestCC, :); % take N biggest elements
@@ -47,9 +48,10 @@ switch params.xy.searchMethod
         if minY ~= inf %we have found at least 1 stick
             [crop, offsetY] = cropHorizontalLine(frame, minY, maxY, params);
             YCbCrOnCrop = rgb2ycbcr(crop);
+            HsvOnCrop   = rgb2hsv(crop);
             for n = 1:N
                 if ~isempty(refLoc) && refLoc{n}.foundXY
-                    [props, largestCC, sticksFound(n)] = performRegionPropsOnMask(YCbCrOnCrop, params, n);
+                    [props, largestCC, sticksFound(n)] = performRegionPropsOnMask(YCbCrOnCrop, HsvOnCrop, params, n);
                     if sticksFound(n)
                         centers = cat(1, props.Centroid);
                         centers = centers(largestCC, :); % take N biggest elements
@@ -71,6 +73,7 @@ end
 
 if fullFrameSearch
     YCbCrFull = rgb2ycbcr(frame);
+    HsvFull   = rgb2hsv(frame);
 end
 if ~isempty(refLoc)
     if fullFrameSearch
@@ -84,7 +87,7 @@ end
 if exist('YCbCrFull', 'var')
     for n = 1:N
         if sticksFound(n) ~= true
-            [props, largestCC, sticksFound(n)] = performRegionPropsOnMask(YCbCrFull, params, n);
+            [props, largestCC, sticksFound(n)] = performRegionPropsOnMask(YCbCrFull, HsvFull, params, n);
             if sticksFound(n)
                 centers = cat(1, props.Centroid);
                 centers = centers(largestCC, :); % take N biggest elements
@@ -99,11 +102,14 @@ if exist('YCbCrFull', 'var')
 end
 end
 
-function [props, largestCC, stickFound] = performRegionPropsOnMask(YCbCr, params, n)
+function [props, largestCC, stickFound] = performRegionPropsOnMask(YCbCr, Hsv, params, n)
 p = params.xy;
 reqProps = {'Centroid', 'Area'};
-imshow((-1)^p.negativeChannel(n) * YCbCr(:,:,p.maskChannel(n)) > p.maskTh(n));
-props = regionprops((-1)^p.negativeChannel(n) * YCbCr(:,:,p.maskChannel(n)) > p.maskTh(n), reqProps);
+% figure;
+% imshow(((-1)^p.negativeChannel(n) * YCbCr(:,:,p.maskChannel(n)) > p.maskThYCbCr(n)) & (Hsv(:,:,2) > p.maskThHsv));
+% figure;
+% imshow(Hsv(:,:,2));
+props = regionprops(((-1)^p.negativeChannel(n) * YCbCr(:,:,p.maskChannel(n)) > p.maskThYCbCr(n)) & (Hsv(:,:,2) > p.maskThHsv), reqProps);
 if size(props,1) > 1 % more then N connected components
     [~, largestCC] = sort([props.Area], 'descend'); % get biggest elements indices
     largestCC = largestCC(1);

@@ -10,12 +10,8 @@ params.minAngle = 30;
 params.maxAngle = 170;
 params.numOfDrums = 3;
 params.drumsYLine = 95;
-
-recordOptions.recordStickLoc = false;
-recordOptions.recordFrames = false;
-
 cams(1) = webcam(3);
 cams(2) = webcam(2);
 
-mainRunFunc('Live', 'cams', cams, 'record', recordOptions, 'params', params);
+mainRunFunc('Live', 'cams', cams, 'params', params);
 close all;

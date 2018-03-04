@@ -11,13 +11,14 @@ params.maxAngle = 170;
 params.numOfDrums = 3;
 params.drumsYLine = 95;
 
-record.recordStickLoc = true;
-record.recordFrames = true;
-record.recordTime = 20;
+recordStickLoc = true;
+recordFrames = true;
+recordTime = 15;
 cams(1) = webcam(2);
 cams(2) = webcam(3);
 
-saveStr = mainRunFunc('Live', 'cams', cams, 'record', recordOptions, 'params', params);
+saveStr = mainRunFunc('Live', 'cams', cams, 'recordStickLoc', recordStickLoc,...
+    'recordFrames', recordFrames, 'recordTime', recordTime, 'params', params);
 input('Press any key to see your recording!')
 mainRunFunc('PlayAll', 'loadStr', saveStr);
 close all;
