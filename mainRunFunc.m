@@ -110,8 +110,8 @@ elseif strcmp(runMode, 'PlayRect')
     params.numOfSticks = 2;
     params.kalman.motionModel = 'ConstantAcceleration';
     params.kalman.initialEstimateError = [1 1 1]*1e5;
-    params.kalman.motionNoise = [1, 1, 1];
-    params.kalman.measurementNoise = 1;
+    params.kalman.motionNoise = [7, 7, 7];
+    params.kalman.measurementNoise = 0.2;
     % test - asaf
     
     % unpack record struct

@@ -15,9 +15,9 @@ params.pp.resize.enable = true;
 params.pp.resize.resizeFactor = 1/4;
 
 % xy location params
-params.xy.maskTh = [55 25]; % red, blue
-params.xy.maskChannel = [2 3]; % A, B channels
-params.xy.negativeChannel = [0 1];
+params.xy.maskTh = [0.8 0.5]; % red, blue
+params.xy.maskChannel = [3 2]; % Cr, Cb channels
+params.xy.negativeChannel = [0 0];
 params.xy.searchMethod = 'horizontalLine';
 params.xy.dy = 10;
 params.xy.cropSize = [50 50];

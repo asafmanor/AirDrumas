@@ -22,8 +22,8 @@ switch params.xy.searchMethod
         for n = 1:N
             if ~isempty(refLoc) && refLoc{n}.found
                 [crop, offsetX, offsetY] = cropAroundPoint(frame, [refLoc{n}.x, refLoc{n}.y], params);
-                LABonCrop = rgb2lab(crop);
-                [props, largestCC, sticksFound(n)] = performRegionPropsOnMask(LABonCrop, params, n);
+                YCbCrOnCrop = rgb2ycbcr(crop);
+                [props, largestCC, sticksFound(n)] = performRegionPropsOnMask(YCbCrOnCrop, params, n);
                 if sticksFound(n)
                     centers = cat(1, props.Centroid);
                     centers = centers(largestCC, :); % take N biggest elements
@@ -36,20 +36,30 @@ switch params.xy.searchMethod
             end
         end
     case 'horizontalLine'
+        maxY = 1;
+        minY = size(frame,1);
         for n = 1:N
             if ~isempty(refLoc) && refLoc{n}.foundXY
-                [crop, offsetY] = cropHorizontalLine(frame, refLoc{n}.y, params);
-                LABonCrop = rgb2lab(crop);
-                [props, largestCC, sticksFound(n)] = performRegionPropsOnMask(LABonCrop, params, n);
-                if sticksFound(n)
-                    centers = cat(1, props.Centroid);
-                    centers = centers(largestCC, :); % take N biggest elements
-                    stickLoc{n}.x = centers(1,1);
-                    stickLoc{n}.y = centers(1,2) + offsetY;
-                else
-                    % in horizontal line method, if we found the stick in the ref image, we MUST find it in this one.
-                    % otherwise we should'nt even look for it.
-                    fullFrameSearch = true;
+                maxY = max(maxY, refLoc{n}.y);
+                minY = min(minY, refLoc{n}.y);
+            end
+        end
+        if minY ~= inf %we have found at least 1 stick
+            [crop, offsetY] = cropHorizontalLine(frame, minY, maxY, params);
+            YCbCrOnCrop = rgb2ycbcr(crop);
+            for n = 1:N
+                if ~isempty(refLoc) && refLoc{n}.foundXY
+                    [props, largestCC, sticksFound(n)] = performRegionPropsOnMask(YCbCrOnCrop, params, n);
+                    if sticksFound(n)
+                        centers = cat(1, props.Centroid);
+                        centers = centers(largestCC, :); % take N biggest elements
+                        stickLoc{n}.x = centers(1,1);
+                        stickLoc{n}.y = centers(1,2) + offsetY;
+                    else
+                        % in horizontal line method, if we found the stick in the ref image
+                        % we MUST find it in this one.
+                        fullFrameSearch = true;
+                    end
                 end
             end
         end
@@ -60,7 +70,7 @@ switch params.xy.searchMethod
 end
 
 if fullFrameSearch
-    LABfull = rgb2lab(frame);
+    YCbCrFull = rgb2ycbcr(frame);
 end
 if ~isempty(refLoc)
     if fullFrameSearch
@@ -70,11 +80,11 @@ if ~isempty(refLoc)
     end
 end
 
-% if we created a full LAB, look for the sticks we didn't find yet
-if exist('LABfull', 'var')
+% if we created a full YCbCr, look for the sticks we didn't find yet
+if exist('YCbCrFull', 'var')
     for n = 1:N
         if sticksFound(n) ~= true
-            [props, largestCC, sticksFound(n)] = performRegionPropsOnMask(LABfull, params, n);
+            [props, largestCC, sticksFound(n)] = performRegionPropsOnMask(YCbCrFull, params, n);
             if sticksFound(n)
                 centers = cat(1, props.Centroid);
                 centers = centers(largestCC, :); % take N biggest elements
@@ -89,11 +99,11 @@ if exist('LABfull', 'var')
 end
 end
 
-function [props, largestCC, stickFound] = performRegionPropsOnMask(LAB, params, n)
+function [props, largestCC, stickFound] = performRegionPropsOnMask(YCbCr, params, n)
 p = params.xy;
 reqProps = {'Centroid', 'Area'};
-%imshow((-1)^p.negativeChannel(n) * LAB(:,:,p.maskChannel(n)) > p.maskTh(n));
-props = regionprops((-1)^p.negativeChannel(n) * LAB(:,:,p.maskChannel(n)) > p.maskTh(n), reqProps);
+imshow((-1)^p.negativeChannel(n) * YCbCr(:,:,p.maskChannel(n)) > p.maskTh(n));
+props = regionprops((-1)^p.negativeChannel(n) * YCbCr(:,:,p.maskChannel(n)) > p.maskTh(n), reqProps);
 if size(props,1) > 1 % more then N connected components
     [~, largestCC] = sort([props.Area], 'descend'); % get biggest elements indices
     largestCC = largestCC(1);
@@ -119,10 +129,10 @@ offsetX = x1 - 1;
 offsetY = y1 - 1;
 end
 
-function [crop, offsetY] = cropHorizontalLine(frame, y, params)
+function [crop, offsetY] = cropHorizontalLine(frame, minY, maxY, params)
 dy = params.xy.dy;
-top     = max(round(y - dy), 1);
-bottom  = min(round(y + dy), size(frame,1));
+top     = max(round(minY - dy), 1);
+bottom  = min(round(maxY + dy), size(frame,1));
 crop = frame(top:bottom, :, :);
 offsetY = top - 1;
 end
