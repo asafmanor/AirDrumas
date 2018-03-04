@@ -8,7 +8,7 @@ params.kalman.motionModel = 'ConstantAcceleration';
 params.kalman.initialEstimateError = [1 1 1]*1e5;
 params.kalman.motionNoise = [7, 7, 7];
 params.kalman.measurementNoise = 0.2;
-params.kalman.enable = false
+params.kalman.enable = false;
 
 params.numOfSticks = 2;
 params.numOfDrums = 3;
@@ -24,7 +24,7 @@ params.pp.resize.resizeFactor = 1/4;
 params.xy.searchMethod = 'full';
 params.xy.dy = 15;
 params.xy.maskThYCbCr = [170 150]; % red, blue
-params.xy.maskThHsv = 0.4;
+params.xy.maskThHsv = 0.2;
 params.xy.maskChannel = [3 2]; % A, B channels
 params.xy.negativeChannel = [0 0];
 

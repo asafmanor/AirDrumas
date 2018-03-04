@@ -37,6 +37,7 @@ if options.displayAnaglyph
     imshow(stereoAnaglyph(rect_frames_tmp{1}, rect_frames_tmp{2})); title('Rectified images');
     key = input('if Anaglyph is not aligned, enter t to terminate\n', 's');
     if strcmp(key, 't')
+        close all;
         error('cameras are not calibrated, try to switch cameras or re-calibrate');
     end
     close;
