@@ -109,6 +109,11 @@ reqProps = {'Centroid', 'Area'};
 % imshow(((-1)^p.negativeChannel(n) * YCbCr(:,:,p.maskChannel(n)) > p.maskThYCbCr(n)) & (Hsv(:,:,2) > p.maskThHsv));
 % figure;
 % imshow(Hsv(:,:,2));
+% figure
+% imshow(YCbCr(:,:,3));
+% figure
+% imshow(YCbCr(:,:,2));
+% close all;
 props = regionprops(((-1)^p.negativeChannel(n) * YCbCr(:,:,p.maskChannel(n)) > p.maskThYCbCr(n)) & (Hsv(:,:,2) > p.maskThHsv), reqProps);
 if size(props,1) > 1 % more then N connected components
     [~, largestCC] = sort([props.Area], 'descend'); % get biggest elements indices

@@ -5,7 +5,7 @@ function [dispParams] = CalcOfflineDispParams(params,frame)
 %% 
 dispParams.numS         = params.numOfSticks;
 dispParams.numD         = params.numOfDrums;
-dispParams.drumR        = params.drumR;
+%dispParams.drumR        = params.drumR;
 dispParams.colors       = {'k','b','y'};
 dispParams.offset       = 100;
 

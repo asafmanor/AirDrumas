@@ -2,7 +2,7 @@ clear ; close all;
 
 camL = webcam(2);
 camR = webcam(3);
-numOfimages = 30;
+numOfimages = 20;
 
 ADRecordCalibrationImages(camL, camR, numOfimages)
 pause;

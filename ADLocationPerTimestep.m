@@ -32,15 +32,17 @@ end
 rectifiedRec = rect_frames;
 
 if options.displayAnaglyph
-    figure;
+    a = figure;
     [rect_frames_tmp{2}, rect_frames_tmp{1}] = rectifyStereoImages(frames{2}, frames{1}, params.stereoParams);
-    imshow(stereoAnaglyph(rect_frames_tmp{1}, rect_frames_tmp{2})); title('Rectified images');
+    imshow(stereoAnaglyph(rect_frames_tmp{1}, rect_frames_tmp{2})); title('Rectified Anaglyph');
+    b = figure;
+    imshow(rect_frames_tmp{1}); title ('Rectified Frame #1');
     key = input('if Anaglyph is not aligned, enter t to terminate\n', 's');
     if strcmp(key, 't')
         close all;
         error('cameras are not calibrated, try to switch cameras or re-calibrate');
     end
-    close;
+    close(a); close(b);
 end
 
 switch params.xy.searchMethod

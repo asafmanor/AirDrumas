@@ -70,8 +70,8 @@ for n = 1:params.numOfDrums
 end
 
 % for decision type #4
-params.marginOpenLock = 0.7; % margin for openning the lock while raising the stick
-params.marginHit = 1; % margin for global threshold for lowering the stick
+params.marginOpenLock = 2; % margin for openning the lock while raising the stick
+params.marginHit = 1.5; % margin for global threshold for lowering the stick
 params.lockOfStick{1} = 0;
 params.lockOfStick{2} = 0;
 params.drumsYLine = 80;

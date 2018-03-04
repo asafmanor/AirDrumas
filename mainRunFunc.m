@@ -45,6 +45,7 @@ if strcmp(runMode, 'Live')
     input('Ready when you are! Press any key to start playing ');
     t = 1;
     tic
+    profile on;
     while ~KEY_IS_PRESSED
         t = t+1;
         drawnow
@@ -87,6 +88,7 @@ elseif strcmp(runMode, 'PlayAll')
     
     lastLoc = recordStickLoc{1};
     rate = totalTime / totalFrames;
+    disp(1./rate);
     dispParams = CalcOfflineDispParams(params, recordRectFrames{2}{1});
     
     for t = 2:totalFrames
@@ -125,6 +127,7 @@ elseif strcmp(runMode, 'PlayRect')
     
     [lastLoc, kf] = ADInitState2(record.frames{2}, params, true); % took second frame pair because first is empty
     rate = totalTime / totalFrames;
+    disp(1./rate);
     dispParams = CalcOfflineDispParams(params, recordRectFrames{2}{1});
     %test - asaf
     profile on
