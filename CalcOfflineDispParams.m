@@ -10,7 +10,7 @@ dispParams.colors       = {'k','b','y'};
 dispParams.offset       = 100;
 
 %% Calculate image bounds
-thZ                 = 10;
+thZ                 = 25;
 [Ybound,Xbound, ~]  = size(frame); 
 medShift            = params.drums{2}.shift;
 Zbounds             = [max(medShift - thZ,0) medShift + thZ];

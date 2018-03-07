@@ -1,7 +1,7 @@
 function saveStr = mainRunFunc(runMode, varargin)
 close all; clc;
-global KEY_IS_PRESSED
-KEY_IS_PRESSED = 0;
+%global KEY_IS_PRESSED
+%KEY_IS_PRESSED = 0;
 global rectifiedRec
 global stats
 stats.ffs = 0;
@@ -39,20 +39,21 @@ if strcmp(runMode, 'Live')
         record.stickLoc{1} = lastLoc;
     end
     
-    gcf
-    set(gcf, 'KeyPressFcn', @myKeyPressFcn)
+    %gcf
+    %set(gcf, 'KeyPressFcn', @myKeyPressFcn)
     preview(camR);
+    disp(params);
     input('Ready when you are! Press any key to start playing ');
+    close;
     t = 1;
     tic
     profile on;
-    while ~KEY_IS_PRESSED
+    while true
         t = t+1;
-        drawnow
+        %drawnow
         frames{1} = snapshot(camR);
         frames{2} = snapshot(camL); % #2 is left camera!
         [stickLoc, kf] = ADLocationPerTimestep(frames, params, 'kalmanFilter', kf);
-        %stickLoc = ADLocationPerTimestep(frames, params);
         if options.recordStickLoc
             record.stickLoc{t} = stickLoc;
         end
@@ -107,17 +108,17 @@ elseif strcmp(runMode, 'PlayRect')
     end
     
     % test - asaf
-    params.xy.searchMethod = 'full';
-    params.xy.dy = 15;
-    params.xy.maskThYCbCr = [170 150]; % red, blue
-    params.xy.maskThHsv = 0.4;
-    params.xy.maskChannel = [3 2]; % A, B channels
-    params.xy.negativeChannel = [0 0];
-    params.numOfSticks = 2;
-    params.kalman.motionModel = 'ConstantAcceleration';
-    params.kalman.initialEstimateError = [1 1 1]*1e5;
-    params.kalman.motionNoise = [7, 7, 7];
-    params.kalman.measurementNoise = 0.2;
+    % params.xy.searchMethod = 'full';
+    % params.xy.dy = 15;
+    % params.xy.maskThYCbCr = [170 150]; % red, blue
+    % params.xy.maskThHsv = 0.4;
+    % params.xy.maskChannel = [3 2]; % A, B channels
+    % params.xy.negativeChannel = [0 0];
+    % params.numOfSticks = 2;
+    % params.kalman.motionModel = 'ConstantAcceleration';
+    % params.kalman.initialEstimateError = [1 1 1]*1e5;
+    % params.kalman.motionNoise = [7, 7, 7];
+    % params.kalman.measurementNoise = 0.2;
     % test - asaf
     
     % unpack record struct
@@ -129,7 +130,6 @@ elseif strcmp(runMode, 'PlayRect')
     rate = totalTime / totalFrames;
     disp(1./rate);
     dispParams = CalcOfflineDispParams(params, recordRectFrames{2}{1});
-    %test - asaf
     profile on
     for t = 2:totalFrames
 %                 if exist('recordFrames', 'var')
@@ -138,10 +138,9 @@ elseif strcmp(runMode, 'PlayRect')
         [stickLoc, kf] = ADLocationPerTimestep(recordRectFrames{t}, params, 'rectifyFrames', false, 'kalmanFilter', kf);
         [drumSound, lastLoc, params] = ADDecision4_5(stickLoc, params, lastLoc);
         ADSound2(drumSound, params);
-        %DisplayPerTimeStamp(stickLoc, recordRectFrames{t}{1}, dispParams);
+        DisplayPerTimeStamp(stickLoc, recordRectFrames{t}{1}, dispParams);
     end
     profile viewer
-    %test - asaf
 end
 end
 
