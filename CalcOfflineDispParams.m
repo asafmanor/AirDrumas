@@ -5,12 +5,12 @@ function [dispParams] = CalcOfflineDispParams(params,frame)
 %% 
 dispParams.numS         = params.numOfSticks;
 dispParams.numD         = params.numOfDrums;
-dispParams.drumR        = params.drumR;
-dispParams.colors       = {'r','b','y'};
+%dispParams.drumR        = params.drumR;
+dispParams.colors       = {'k','b','y'};
 dispParams.offset       = 100;
 
 %% Calculate image bounds
-thZ                 = 10;
+thZ                 = 25;
 [Ybound,Xbound, ~]  = size(frame); 
 medShift            = params.drums{2}.shift;
 Zbounds             = [max(medShift - thZ,0) medShift + thZ];

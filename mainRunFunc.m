@@ -1,8 +1,24 @@
-function saveStr = mainRunFunc(runMode, cams, record, loadStr, params)
+function saveStr = mainRunFunc(runMode, varargin)
 close all; clc;
-global KEY_IS_PRESSED
-KEY_IS_PRESSED = 0;
+%global KEY_IS_PRESSED
+%KEY_IS_PRESSED = 0;
 global rectifiedRec
+global stats
+stats.ffs = 0;
+stats.nffs = 0;
+
+p = inputParser;
+p.StructExpand = false;
+addParameter(p, 'cams', []);
+addParameter(p, 'recordStickLoc', false);
+addParameter(p, 'recordFrames', false);
+addParameter(p, 'recordTime', inf);
+addParameter(p, 'loadStr', []);
+addParameter(p, 'params', []);
+parse(p, varargin{:});
+
+options = p.Results;
+params = options.params;
 
 % record variables
 saveStr = '';
@@ -12,63 +28,69 @@ if strcmp(runMode, 'Live')
     if ~exist('params', 'var')
         error('in Live mode, you must give mainRunFunc the params struct');
     end
-    camR = cams(1);
-    camL = cams(2);
+    camR = options.cams(1);
+    camL = options.cams(2);
     % init state for drum machine
     frames{1} = snapshot(camR);
     frames{2} = snapshot(camL); % #2 is left camera!
-    lastLoc = ADInitState2(frames, params, params.displayAnaglyph);
-    if record.recordStickLoc
+    %lastLoc = ADInitState2(frames, params);
+    [lastLoc, kf] = ADInitState2(frames, params, false);
+    if options.recordStickLoc
         record.stickLoc{1} = lastLoc;
     end
     
-    gcf
-    set(gcf, 'KeyPressFcn', @myKeyPressFcn)
+    %gcf
+    %set(gcf, 'KeyPressFcn', @myKeyPressFcn)
     preview(camR);
+    disp(params);
     input('Ready when you are! Press any key to start playing ');
+    close;
     t = 1;
     tic
-    while ~KEY_IS_PRESSED
+    profile on;
+    while true
         t = t+1;
-        drawnow
+        %drawnow
         frames{1} = snapshot(camR);
         frames{2} = snapshot(camL); % #2 is left camera!
-        stickLoc = ADLocationPerTimestep(frames, params);
-        if record.recordStickLoc
+        [stickLoc, kf] = ADLocationPerTimestep(frames, params, 'kalmanFilter', kf);
+        if options.recordStickLoc
             record.stickLoc{t} = stickLoc;
         end
-        if record.recordFrames
+        if options.recordFrames
+            % this global variable rectifiedRec should be updated
+            % with the rectified frames from ADLocationPerTimestep
             record.frames{t} = rectifiedRec;
         end
         [drumSound, lastLoc, params] = ADDecision4_5(stickLoc, params, lastLoc);
         ADSound2(drumSound, params);
-        if isfield(record, 'recordTime') && toc > record.recordTime
+        if toc > options.recordTime
             break;
         end
     end
     record.totalTime = toc;
     record.totalFrames = t;
-    if record.recordStickLoc || record.recordFrames
+    if options.recordStickLoc || options.recordFrames
         clk = string(clock);
         str = sprintf('rec_%s_%s', clk(4), clk(5));
         save(str, 'record', 'params');
         saveStr = str;
     end
-elseif strcmp(runMode, 'Test')
-    load([loadStr,'.mat'], 'record');
+elseif strcmp(runMode, 'PlayAll')
+    load([options.loadStr,'.mat'], 'record');
     if isempty(params)
-        load([loadStr,'.mat'], 'params');
+        load([options.loadStr,'.mat'], 'params');
     end
-    %params.drumGauges = gauges;
     % unpack record struct
     recordStickLoc = record.stickLoc;
     totalTime = record.totalTime;
     totalFrames = record.totalFrames;
-    recordFrames = record.frames;
+    recordRectFrames = record.frames;
     
     lastLoc = recordStickLoc{1};
     rate = totalTime / totalFrames;
-    dispParams = CalcOfflineDispParams(params, recordFrames{2}{1});
+    disp(1./rate);
+    dispParams = CalcOfflineDispParams(params, recordRectFrames{2}{1});
     
     for t = 2:totalFrames
 %                 if exist('recordFrames', 'var')
@@ -77,8 +99,48 @@ elseif strcmp(runMode, 'Test')
         stickLoc = recordStickLoc{t};
         [drumSound, lastLoc, params] = ADDecision4_5(stickLoc, params, lastLoc);
         ADSound2(drumSound, params);
-        DisplayPerTimeStamp(stickLoc, recordFrames{t}{1}, dispParams);
+        DisplayPerTimeStamp(stickLoc, recordRectFrames{t}{1}, dispParams);
     end
+elseif strcmp(runMode, 'PlayRect')
+    load([options.loadStr,'.mat'], 'record');
+    if isempty(params)
+        load([options.loadStr,'.mat'], 'params');
+    end
+    
+    % test - asaf
+    % params.xy.searchMethod = 'full';
+    % params.xy.dy = 15;
+    % params.xy.maskThYCbCr = [170 150]; % red, blue
+    % params.xy.maskThHsv = 0.4;
+    % params.xy.maskChannel = [3 2]; % A, B channels
+    % params.xy.negativeChannel = [0 0];
+    % params.numOfSticks = 2;
+    % params.kalman.motionModel = 'ConstantAcceleration';
+    % params.kalman.initialEstimateError = [1 1 1]*1e5;
+    % params.kalman.motionNoise = [7, 7, 7];
+    % params.kalman.measurementNoise = 0.2;
+    % test - asaf
+    
+    % unpack record struct
+    totalTime = record.totalTime;
+    totalFrames = record.totalFrames;
+    recordRectFrames = record.frames;
+    
+    [lastLoc, kf] = ADInitState2(record.frames{2}, params, true); % took second frame pair because first is empty
+    rate = totalTime / totalFrames;
+    disp(1./rate);
+    dispParams = CalcOfflineDispParams(params, recordRectFrames{2}{1});
+    profile on
+    for t = 2:totalFrames
+%                 if exist('recordFrames', 'var')
+%                     imshow(recordFrames{t}{1}); % show right camera
+%                 end
+        [stickLoc, kf] = ADLocationPerTimestep(recordRectFrames{t}, params, 'rectifyFrames', false, 'kalmanFilter', kf);
+        [drumSound, lastLoc, params] = ADDecision4_5(stickLoc, params, lastLoc);
+        ADSound2(drumSound, params);
+        DisplayPerTimeStamp(stickLoc, recordRectFrames{t}{1}, dispParams);
+    end
+    profile viewer
 end
 end
 

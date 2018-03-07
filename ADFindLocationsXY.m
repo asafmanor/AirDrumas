@@ -36,8 +36,6 @@ end
 
 if N == 2
 	props = regionprops(B < params.xy.blueMaskTh, reqProps);
-    % test - asaf
-    %figure(2); imshow(B < params.xy.blueMaskTh);
     
 	if size(props,1) > 1 % more then N connected components
     	[~, largestCC] = sort([props.Area], 'descend'); % get biggest elements indices
