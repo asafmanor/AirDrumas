@@ -1,6 +1,4 @@
 calibPictures/
 CalibData/
 *.asv
-rec_*
 *.png
-accuracyAndPrecision.mat

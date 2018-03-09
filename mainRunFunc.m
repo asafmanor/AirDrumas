@@ -1,7 +1,5 @@
 function saveStr = mainRunFunc(runMode, varargin)
 close all; clc;
-%global KEY_IS_PRESSED
-%KEY_IS_PRESSED = 0;
 global rectifiedRec
 global stats
 stats.ffs = 0;
@@ -39,8 +37,6 @@ if strcmp(runMode, 'Live')
         record.stickLoc{1} = lastLoc;
     end
     
-    %gcf
-    %set(gcf, 'KeyPressFcn', @myKeyPressFcn)
     preview(camR);
     disp(params);
     input('Ready when you are! Press any key to start playing ');
@@ -106,20 +102,6 @@ elseif strcmp(runMode, 'PlayRect')
     if isempty(params)
         load([options.loadStr,'.mat'], 'params');
     end
-    
-    % test - asaf
-    % params.xy.searchMethod = 'full';
-    % params.xy.dy = 15;
-    % params.xy.maskThYCbCr = [170 150]; % red, blue
-    % params.xy.maskThHsv = 0.4;
-    % params.xy.maskChannel = [3 2]; % A, B channels
-    % params.xy.negativeChannel = [0 0];
-    % params.numOfSticks = 2;
-    % params.kalman.motionModel = 'ConstantAcceleration';
-    % params.kalman.initialEstimateError = [1 1 1]*1e5;
-    % params.kalman.motionNoise = [7, 7, 7];
-    % params.kalman.measurementNoise = 0.2;
-    % test - asaf
     
     % unpack record struct
     totalTime = record.totalTime;
